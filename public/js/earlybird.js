@@ -51,8 +51,10 @@
     if (registrationMethods) {
       registrationMethods.style.display = 'none';
     }
-    if (emailInput) {
-      emailInput.value = '';
+    // Clear modal's own email input (now has unique ID earlyBirdEmailModal)
+    var modalEmailInput = document.getElementById('earlyBirdEmailModal');
+    if (modalEmailInput) {
+      modalEmailInput.value = '';
     }
 
     // Show modal
@@ -96,10 +98,11 @@
     }
   }
 
-  // ── Email Registration ─────────────────────────────────────
+  // ── Email Registration (Modal) ─────────────────────────────
 
   /**
-   * Validate email, record registration, show toast, close modal.
+   * Validate email from modal, record registration, show toast, close modal.
+   * Uses the modal's unique input ID: earlyBirdEmailModal
    */
   function submitEmailRegistration() {
     if (!selectedPlan) {
@@ -107,12 +110,14 @@
       return;
     }
 
-    if (!emailInput) {
+    // Use the modal-specific input (not the inline one)
+    var modalEmailInput = document.getElementById('earlyBirdEmailModal');
+    if (!modalEmailInput) {
       showToast('發生錯誤，請重新整理頁面。', 'error');
       return;
     }
 
-    const email = emailInput.value.trim();
+    const email = modalEmailInput.value.trim();
 
     // Basic email validation
     var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -149,6 +154,103 @@
     }
   }
 
+  // ── Inline Plan Selection (bottom section) ──────────────────
+
+  let selectedPlanInline = null;
+
+  /**
+   * Select a plan in the inline bottom section, reveal registration area.
+   * @param {'A'|'B'} plan
+   */
+  function selectPlanInline(plan) {
+    selectedPlanInline = plan;
+
+    // Toggle card selection
+    document.querySelectorAll('.plan-card-inline').forEach(function (card) {
+      card.classList.remove('plan-card-inline--selected');
+    });
+    var planCard = document.getElementById('planCard' + plan);
+    if (planCard) {
+      planCard.classList.add('plan-card-inline--selected');
+    }
+
+    // Show registration area
+    var regArea = document.getElementById('registrationArea');
+    if (regArea) {
+      regArea.style.display = 'block';
+      // Scroll registration area into view smoothly
+      regArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    // Update title based on plan
+    var title = document.getElementById('registrationTitle');
+    if (title) {
+      title.textContent = plan === 'A' ? '登記接收上線通知' : '登記搶先預約早鳥資格';
+    }
+
+    // Track selection
+    if (typeof window.trackCTAClick === 'function') {
+      window.trackCTAClick(plan === 'A' ? 'plan-a-select' : 'plan-b-select');
+    }
+  }
+
+  /**
+   * Submit email registration from inline bottom section.
+   */
+  function submitEmailRegistrationInline() {
+    var emailInputEl = document.getElementById('earlyBirdEmail');
+    var email = emailInputEl ? emailInputEl.value.trim() : '';
+
+    if (!email || email.indexOf('@') === -1 || email.indexOf('.') === -1) {
+      showToast('請輸入有效嘅電郵地址', 'error');
+      return;
+    }
+    if (!selectedPlanInline) {
+      showToast('請先選擇一個方案', 'error');
+      return;
+    }
+
+    if (typeof window.recordRegistration === 'function') {
+      window.recordRegistration(selectedPlanInline, 'email', email);
+    }
+    showToast('🎉 登記成功！我哋會喺服務上線時通知你。', 'success');
+
+    // Reset
+    if (emailInputEl) emailInputEl.value = '';
+    var regArea = document.getElementById('registrationArea');
+    if (regArea) regArea.style.display = 'none';
+    document.querySelectorAll('.plan-card-inline').forEach(function (c) {
+      c.classList.remove('plan-card-inline--selected');
+    });
+    selectedPlanInline = null;
+  }
+
+  /**
+   * Submit Google registration from inline bottom section.
+   */
+  function submitGoogleRegistrationInline() {
+    if (!selectedPlanInline) {
+      showToast('請先選擇一個方案', 'error');
+      return;
+    }
+
+    if (typeof window.loginWithGoogleForPlan === 'function') {
+      // Pass plan to auth handler; it will call recordRegistration + showToast + reset
+      window._earlyBirdSelectedPlan = selectedPlanInline;
+      window.loginWithGoogleForPlan(selectedPlanInline);
+
+      // Reset UI after auth callback
+      var regArea = document.getElementById('registrationArea');
+      if (regArea) regArea.style.display = 'none';
+      document.querySelectorAll('.plan-card-inline').forEach(function (c) {
+        c.classList.remove('plan-card-inline--selected');
+      });
+      selectedPlanInline = null;
+    } else {
+      showToast('Google 登入暫時無法使用，請用 Email 登記', 'error');
+    }
+  }
+
   // ── Toast ──────────────────────────────────────────────────
 
   /**
@@ -181,6 +283,9 @@
   window.selectPlan = selectPlan;
   window.submitEmailRegistration = submitEmailRegistration;
   window.submitGoogleRegistration = submitGoogleRegistration;
+  window.selectPlanInline = selectPlanInline;
+  window.submitEmailRegistrationInline = submitEmailRegistrationInline;
+  window.submitGoogleRegistrationInline = submitGoogleRegistrationInline;
   window.showToast = showToast;
 
   // Also expose selectedPlan for debugging

@@ -731,3 +731,134 @@ a:hover { color: #4A7D89; }
   from { opacity: 0; transform: translateX(40px); }
   to { opacity: 1; transform: translateX(0); }
 }
+
+/* ===== Inline Plan Cards (bottom section) ===== */
+.plan-cards-inline {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  max-width: 800px;
+  margin: 2rem auto 0;
+}
+
+@media (max-width: 640px) {
+  .plan-cards-inline {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+  }
+}
+
+.plan-card-inline {
+  border: 2px solid #e0e0e0;
+  border-radius: 16px;
+  padding: 2rem 1.5rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  background: var(--bg-card, #fff);
+  text-align: center;
+  position: relative;
+}
+
+.plan-card-inline:hover {
+  border-color: var(--accent, #2563eb);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(37, 99, 235, 0.12);
+}
+
+.plan-card-inline--selected {
+  border-color: var(--accent, #2563eb);
+  background: rgba(37, 99, 235, 0.04);
+  box-shadow: 0 8px 28px rgba(37, 99, 235, 0.2);
+  transform: translateY(-4px);
+}
+
+.plan-card-inline--selected::after {
+  content: '✓ 已選取';
+  position: absolute;
+  top: -12px;
+  right: 16px;
+  background: var(--accent, #2563eb);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+}
+
+.plan-card-inline h3 {
+  font-size: 1.25rem;
+  margin: 0.5rem 0;
+}
+
+.plan-card-inline .plan-price {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0.5rem 0;
+  color: var(--accent, #2563eb);
+}
+
+.plan-card-inline .plan-price span {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: #999;
+}
+
+.plan-card-inline .plan-desc {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.plan-card-inline ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+  font-size: 0.85rem;
+}
+
+.plan-card-inline ul li {
+  padding: 0.3rem 0;
+}
+
+/* Registration area (below plan cards, shown after selection) */
+.registration-area {
+  max-width: 500px;
+  margin: 2rem auto 0;
+  padding: 2rem;
+  background: var(--bg-card, #fff);
+  border-radius: 16px;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  animation: fadeSlideIn 0.35s ease;
+}
+
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.registration-area h4 {
+  margin: 0 0 1rem;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.disclaimer-banner-inline {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+  color: #856404;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+  text-align: center;
+}
+
+/* Ensure existing utility classes still work */
+.early-bird-section .cta-note {
+  text-align: center;
+  margin-top: 1.5rem;
+}

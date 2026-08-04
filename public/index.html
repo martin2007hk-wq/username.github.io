@@ -25,7 +25,7 @@
       </ul>
       <!-- Auth Button (右上角注冊) -->
       <div class="navbar-cta" id="navCta">
-        <button class="btn btn-primary btn-sm" onclick="scrollToEarlyBird()">早鳥計劃</button>
+        <button class="btn btn-primary btn-sm" onclick="scrollToEarlyBird()">註冊</button>
       </div>
       <button class="hamburger" id="hamburger" aria-label="Toggle menu">
         <span></span><span></span><span></span>
@@ -155,12 +155,63 @@
   <!-- ===== Early Bird CTA ===== -->
   <section class="section early-bird-section" id="early-bird">
     <div class="container">
-      <span class="section-label">· Early Access ·</span>
-      <h2 class="section-title">搶先預約早鳥資格</h2>
-      <p class="cta-sub">成為 PostAIAge 嘅早期支持者，鎖定最低價格同獨家權益。</p>
-      <button class="btn btn-primary btn-lg cta-main-button" onclick="openEarlyBirdModal('footer-cta');">
-        🔒 鎖定早鳥優惠權益（暫不扣款）
-      </button>
+      <span class="section-label">· 立即註冊 ·</span>
+      <h2 class="section-title">鎖定你的專屬權益</h2>
+      <p class="cta-sub">揀一個啱你嘅方案，上線時我哋第一時間通知你。</p>
+
+      <!-- 兩個方案一左一右 -->
+      <div class="plan-cards-inline">
+        <!-- 方案 A：免費訂閱通知 -->
+        <div class="plan-card-inline" id="planCardA" onclick="selectPlanInline('A')" data-plan="A">
+          <span class="plan-badge">📩 免費</span>
+          <h3>訂閱上線通知</h3>
+          <p class="plan-price">$0</p>
+          <p class="plan-desc">留低電郵，服務上線即刻通知你。</p>
+          <ul>
+            <li>✅ 上線第一時間 Email 通知</li>
+            <li>✅ 享上線 <strong>8 折</strong> 優惠碼</li>
+            <li>✅ 早鳥資訊優先接收</li>
+          </ul>
+        </div>
+
+        <!-- 方案 B：搶先預約早鳥 -->
+        <div class="plan-card-inline" id="planCardB" onclick="selectPlanInline('B')" data-plan="B">
+          <span class="plan-badge plan-badge--hot">🔥 限量早鳥</span>
+          <h3>搶先預約早鳥資格</h3>
+          <p class="plan-price">鎖定最低價<span>（暫不扣款）</span></p>
+          <p class="plan-desc">成為概念共建者，鎖定 6 折 + 投票權。</p>
+          <ul>
+            <li>✅ 包含訂閱通知 <strong>全部權益</strong></li>
+            <li>✅ 上線鎖定 <strong>6 折</strong> 最低價</li>
+            <li>✅ 產品方向 <strong>投票權</strong></li>
+            <li>✅ 專屬社群頻道</li>
+            <li>✅ 限量 Early Builder 徽章</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 勾選後才出現的註冊區域 -->
+      <div class="registration-area" id="registrationArea" style="display:none;">
+        <div class="disclaimer-banner-inline">
+          ⚠️ 本服務目前處於概念與原型開發階段，預計 2027 年上線。本次登記僅作優先權確認與意向調查，<strong>不會進行任何扣款</strong>。
+        </div>
+        <h4 id="registrationTitle">以 Email 登記</h4>
+        <div class="email-registration">
+          <input type="email" id="earlyBirdEmail" placeholder="輸入你的電郵地址" required>
+          <p class="privacy-notice">
+            🔐 填寫即代表同意我們在服務上線時透過 Email 通知您，我們不會將您的資料作其他用途。
+          </p>
+          <button class="btn btn-primary btn-full" onclick="submitEmailRegistrationInline()">
+            確認登記 →
+          </button>
+        </div>
+        <div class="divider"><span>或</span></div>
+        <button class="btn btn-google btn-full" onclick="submitGoogleRegistrationInline()">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          以 Google 帳戶繼續
+        </button>
+      </div>
+
       <p class="cta-note">目前為概念募集階段，點擊僅作優先權登記，不會收取任何費用。</p>
     </div>
   </section>
@@ -225,7 +276,7 @@
         <div class="registration-methods" id="registrationMethods" style="display:none;">
           <h4>選擇註冊方式：</h4>
           <div class="email-registration">
-            <input type="email" id="earlyBirdEmail" placeholder="輸入你的電郵地址" required>
+            <input type="email" id="earlyBirdEmailModal" placeholder="輸入你的電郵地址" required>
             <p class="privacy-notice">
               🔐 填寫即代表同意我們在服務上線時透過 Email 通知您，我們不會將您的資料作其他用途。
             </p>
