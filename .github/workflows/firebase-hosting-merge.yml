@@ -11,6 +11,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Debug - Verify deploy context
+        run: |
+          echo "=== Working Directory ==="
+          pwd
+          echo "=== Repo Root Files ==="
+          ls -la
+          echo "=== Public Directory ==="
+          ls -laR public/
+          echo "=== Index.html exists? ==="
+          test -f public/index.html && echo "YES" || echo "NO - MISSING!"
+          echo "=== Firebase Config ==="
+          cat firebase.json
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}
