@@ -26,14 +26,14 @@
       <!-- Auth Button (右上角注冊) -->
       <div class="navbar-cta" id="navCta" style="gap: 12px;">
         <button id="auth-login-btn" class="auth-btn" onclick="loginWithGoogle()">
-          <span class="material-icons">login</span> 注冊
+          <span class="material-icons">login</span> 加入早鳥過渡計畫
         </button>
         <div id="auth-user-info" class="auth-user">
           <img id="auth-avatar" class="auth-avatar" src="" alt="avatar" referrerpolicy="no-referrer">
           <span id="auth-name" class="auth-name"></span>
           <button id="auth-logout-btn" class="auth-logout" onclick="logout()">登出</button>
         </div>
-        <a href="#cta" class="btn btn-primary btn-sm" style="margin-left:4px;">獲取《過渡期生存指南》</a>
+        <a href="#cta" class="btn btn-primary btn-sm" style="margin-left:4px;">加入早鳥過渡計畫</a>
       </div>
       <button class="hamburger" id="hamburger" aria-label="Toggle menu">
         <span></span><span></span><span></span>
@@ -166,9 +166,10 @@
       <h2 class="cta-headline">準備好迎接你的"第二人生"了嗎？</h2>
       <p class="cta-sub">不要獨自面對時代的洪流。輸入郵箱，每週獲取關於"後AI時代"的意義探索、轉型案例與線下活動資訊。</p>
       <form class="cta-form" action="https://formspree.io/f/xeeybdgo" method="POST">
+        <input type="hidden" name="_next" value="https://post-ai-age.web.app/thanks">
         <input type="email" name="email" placeholder="輸入你的郵箱地址" required>
         <textarea name="features" placeholder="你期望 PostAIAge 提供什麼功能？（選填）" rows="3"></textarea>
-        <button type="submit" class="btn btn-primary">訂閲 / 開啓探索</button>
+        <button type="submit" class="btn btn-primary">加入早鳥過渡計畫</button>
       </form>
       <p class="cta-note">我們尊重你的隱私，絕不發送垃圾郵件。</p>
       <p class="cta-note" style="margin-top: 8px;">📧 直接聯繫我們：<a href="mailto:contact@postaiage.com" style="color: var(--accent); font-weight: 600;">contact@postaiage.com</a></p>

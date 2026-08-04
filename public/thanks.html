@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>多謝加入！ — PostAIAge</title>
+  <meta name="description" content="你已成功加入 PostAIAge 早鳥過渡計畫">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .thanks-page {
+      display: flex; align-items: center; justify-content: center;
+      min-height: 100vh; padding: 48px 24px;
+      position: relative; overflow: hidden;
+    }
+    .thanks-glow {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(232,168,80,0.10) 0%, rgba(250,247,242,0) 70%);
+      border-radius: 50%; pointer-events: none; z-index: 0;
+    }
+    .thanks-card {
+      position: relative; z-index: 1;
+      text-align: center;
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 64px 48px;
+      max-width: 540px; width: 100%;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-card);
+      animation: thanksFadeIn 0.6s ease;
+    }
+    @keyframes thanksFadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .thanks-icon {
+      font-size: 4rem; margin-bottom: 20px; display: block;
+    }
+    .thanks-title {
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 700; color: var(--text); margin-bottom: 12px;
+      line-height: 1.4;
+    }
+    .thanks-main {
+      font-size: 1.1rem; color: var(--text-muted);
+      margin-bottom: 8px; line-height: 1.8;
+    }
+    .thanks-sub {
+      font-size: 0.95rem; color: var(--text-light);
+      margin-bottom: 36px; line-height: 1.7;
+    }
+    .thanks-divider {
+      width: 60px; height: 2px; background: var(--accent);
+      border-radius: 2px; margin: 0 auto 32px;
+      opacity: 0.5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="thanks-page">
+    <div class="thanks-glow"></div>
+    <div class="thanks-card">
+      <span class="thanks-icon">🎉</span>
+      <h1 class="thanks-title">多謝加入！</h1>
+      <p class="thanks-main">你已成功加入 PostAIAge 早鳥過渡計畫</p>
+      <p class="thanks-sub">項目正在全力籌備中，上線時會第一時間通知你！</p>
+      <div class="thanks-divider"></div>
+      <a href="index" class="btn btn-primary">
+        <span class="material-icons" style="font-size:1.1rem;">arrow_back</span>
+        返回主頁
+      </a>
+    </div>
+  </div>
+
+</body>
+</html>

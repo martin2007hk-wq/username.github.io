@@ -15,11 +15,16 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
+let _isNewSignIn = false;
+
 // Google 注冊
 window.loginWithGoogle = async () => {
   try {
+    _isNewSignIn = true;
     await signInWithPopup(auth, provider);
+    window.location.href = '/thanks';
   } catch (error) {
+    _isNewSignIn = false;
     console.error("Google 注冊失敗：", error);
   }
 };
