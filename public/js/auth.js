@@ -21,11 +21,58 @@ let _isNewSignIn = false;
 window.loginWithGoogle = async () => {
   try {
     _isNewSignIn = true;
-    await signInWithPopup(auth, provider);
+    const result = await signInWithPopup(auth, provider);
+    // If called from navbar/standalone, redirect to thanks
+    // If there's a pending plan selection (set by loginWithGoogleForPlan), skip redirect
+    if (window._earlyBirdPendingPlan) {
+      // Handled by loginWithGoogleForPlan — do not redirect
+      return result;
+    }
     window.location.href = '/thanks';
   } catch (error) {
     _isNewSignIn = false;
     console.error("Google 注冊失敗：", error);
+  }
+};
+
+/**
+ * Google login for early-bird plan registration.
+ * Called by earlybird.js submitGoogleRegistration().
+ * Does NOT redirect to /thanks; instead records registration and closes modal.
+ * @param {'A'|'B'} plan
+ */
+window.loginWithGoogleForPlan = async (plan) => {
+  try {
+    // Set flag so loginWithGoogle knows not to redirect
+    window._earlyBirdPendingPlan = plan;
+
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+
+    // Record registration via tracker
+    if (typeof window.recordRegistration === 'function') {
+      window.recordRegistration(plan, 'google', null);
+    }
+
+    // Close the early-bird modal
+    if (typeof window.closeModal === 'function') {
+      window.closeModal();
+    }
+
+    // Show success toast
+    const displayName = user.displayName || user.email || '新用戶';
+    if (typeof window.showToast === 'function') {
+      window.showToast('🎉 登記成功！歡迎加入，' + displayName + '！我哋會喺服務上線時通知你。', 'success');
+    }
+
+    // Clear the pending plan flag
+    delete window._earlyBirdPendingPlan;
+  } catch (error) {
+    delete window._earlyBirdPendingPlan;
+    console.error("Google 注冊失敗（早鳥方案）：", error);
+    if (typeof window.showToast === 'function') {
+      window.showToast('Google 登入失敗，請再試一次或改用 Email 登記。', 'error');
+    }
   }
 };
 
