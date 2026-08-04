@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>私隱政策聲明 — PostAIAge</title>
+  <meta name="description" content="PostAIAge 私隱政策聲明 — 我們致力保護您的個人資料，遵守香港《個人資料（私隱）條例》，確保您的數據安全透明。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===== Reset & Base ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #FAF7F2;
+      --bg-card: #FFFBF5;
+      --accent: #E8A850;
+      --accent-deep: #D4923A;
+      --accent-light: #FDF0DD;
+      --secondary: #6B9EAB;
+      --text: #2C2416;
+      --text-muted: #6B5E4A;
+      --text-light: #9B8E7A;
+      --border: #E8DFD0;
+      --radius-sm: 8px;
+      --radius: 16px;
+      --radius-lg: 20px;
+      --radius-pill: 9999px;
+      --shadow-card: 0 2px 16px rgba(44, 36, 22, 0.06);
+      --max-width: 860px;
+      --nav-height: 72px;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: var(--nav-height);
+    }
+
+    body {
+      font-family: 'Noto Sans SC', 'PingFang SC', 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.75;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ===== Typography ===== */
+    h1, h2, h3, h4 { font-weight: 700; line-height: 1.3; }
+    a { color: var(--secondary); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: #4A7D89; }
+
+    /* ===== Navbar ===== */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      height: var(--nav-height);
+      background: rgba(250, 247, 242, 0.82);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .navbar .container {
+      max-width: var(--max-width);
+      margin: 0 auto; padding: 0 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 100%;
+    }
+    .navbar-logo {
+      font-size: 1.35rem; font-weight: 700; color: var(--text);
+      letter-spacing: -0.02em;
+    }
+    .navbar-logo:hover { color: var(--accent); }
+    .navbar-back {
+      font-size: 0.92rem; font-weight: 500;
+      color: var(--text-muted);
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    .navbar-back:hover { color: var(--text); }
+
+    /* ===== Main Content ===== */
+    .main {
+      padding-top: calc(var(--nav-height) + 60px);
+      padding-bottom: 80px;
+    }
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto; padding: 0 24px;
+    }
+
+    /* ===== Page Header ===== */
+    .page-header {
+      text-align: center;
+      margin-bottom: 48px;
+      padding-bottom: 36px;
+      border-bottom: 1px solid var(--border);
+    }
+    .page-title {
+      font-size: clamp(1.8rem, 4vw, 2.4rem);
+      font-weight: 700; color: var(--text);
+      margin-bottom: 8px;
+    }
+    .page-updated {
+      font-size: 0.9rem; color: var(--text-light);
+    }
+
+    /* ===== Privacy Section ===== */
+    .privacy-section {
+      margin-bottom: 40px;
+    }
+    .privacy-section:last-child {
+      margin-bottom: 0;
+    }
+    .privacy-section h2 {
+      font-size: 1.3rem;
+      color: var(--text);
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--accent-light);
+      display: flex; align-items: center; gap: 10px;
+    }
+    .privacy-section h2 .section-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px;
+      background: var(--accent);
+      color: #FFFDF7; font-size: 0.85rem;
+      border-radius: var(--radius-sm);
+      flex-shrink: 0;
+    }
+    .privacy-section p {
+      font-size: 0.98rem; color: var(--text-muted);
+      margin-bottom: 12px;
+      line-height: 1.85;
+    }
+    .privacy-section p:last-child {
+      margin-bottom: 0;
+    }
+    .privacy-section ul {
+      list-style: none;
+      margin-bottom: 12px;
+      padding-left: 0;
+    }
+    .privacy-section ul li {
+      font-size: 0.98rem; color: var(--text-muted);
+      margin-bottom: 8px; line-height: 1.75;
+      padding-left: 24px; position: relative;
+    }
+    .privacy-section ul li::before {
+      content: '•';
+      position: absolute; left: 6px; top: 0;
+      color: var(--accent); font-weight: 700;
+    }
+    .privacy-section ul li:last-child {
+      margin-bottom: 0;
+    }
+
+    .privacy-highlight {
+      background: var(--accent-light);
+      border-left: 3px solid var(--accent);
+      padding: 16px 20px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin-bottom: 14px;
+    }
+    .privacy-highlight p {
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .privacy-highlight p:last-child {
+      margin-bottom: 0;
+    }
+
+    .privacy-contact {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 28px 32px;
+      margin-top: 16px;
+      box-shadow: var(--shadow-card);
+    }
+    .privacy-contact p {
+      margin-bottom: 6px;
+    }
+    .privacy-contact strong {
+      color: var(--text);
+    }
+
+    /* ===== Footer ===== */
+    .footer {
+      background: #F5F0E7; padding: 36px 0 28px;
+      text-align: center;
+    }
+    .footer .container {
+      max-width: var(--max-width);
+      margin: 0 auto; padding: 0 24px;
+    }
+    .footer-links {
+      display: flex; align-items: center; justify-content: center;
+      gap: 28px; flex-wrap: wrap; list-style: none;
+      margin-bottom: 16px;
+    }
+    .footer-links a {
+      font-size: 0.9rem; color: var(--text-muted);
+    }
+    .footer-links a:hover { color: var(--text); }
+    .footer-copy {
+      font-size: 0.85rem; color: var(--text-light);
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 600px) {
+      .main {
+        padding-top: calc(var(--nav-height) + 40px);
+        padding-bottom: 48px;
+      }
+      .page-header {
+        margin-bottom: 32px;
+        padding-bottom: 24px;
+      }
+      .privacy-section {
+        margin-bottom: 32px;
+      }
+      .privacy-section h2 {
+        font-size: 1.15rem;
+      }
+      .privacy-contact {
+        padding: 20px 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===== Navbar ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="navbar-logo">PostAIAge</a>
+      <a href="index.html" class="navbar-back">← 返回主頁</a>
+    </div>
+  </nav>
+
+  <!-- ===== Main Content ===== -->
+  <main class="main">
+    <div class="container">
+
+      <!-- Page Header -->
+      <header class="page-header">
+        <h1 class="page-title">PostAIAge 私隱政策聲明</h1>
+        <p class="page-updated">最後更新日期：2026 年 8 月 4 日</p>
+      </header>
+
+      <!-- Section 1: 我們的承諾與品牌理念 -->
+      <section class="privacy-section" id="section-1">
+        <h2><span class="section-num">1</span> 我們的承諾與品牌理念</h2>
+        <p>
+          在這個演算法與數據交織的 AI 時代，PostAIAge（下稱「我們」或「本網站」）深知您個人經歷的獨特與珍貴。我們致力協助您重新尋找「作為人」不可被替代的價值，而這一切的基礎，建立於對您個人私隱的絕對尊重與保護。
+        </p>
+        <p>
+          我們承諾完全遵守香港特別行政區法例第 486 章《個人資料（私隱）條例》（「私隱條例」）的規定。我們將確保我們的員工及服務供應商嚴格遵守本聲明所載的保安及保密標準。
+        </p>
+      </section>
+
+      <!-- Section 2: 我們收集的個人資料 -->
+      <section class="privacy-section" id="section-2">
+        <h2><span class="section-num">2</span> 我們收集的個人資料</h2>
+        <p>為了向您提供更精準的「過渡期現實路徑」及相關服務，我們可能需要在您註冊、瀏覽或使用我們的服務時，收集以下類別的個人資料：</p>
+        <ul>
+          <li><strong>基本識別資料：</strong>姓名、電郵地址、聯絡電話。</li>
+          <li><strong>背景與經歷資料（自願提供）：</strong>您的職業背景、職涯困境描述、在使用我們的評估工具或諮詢服務時所輸入的文字及選項。</li>
+          <li><strong>技術數據：</strong>IP 地址、瀏覽器類型、裝置資訊、瀏覽紀錄及 Cookie（主要用於維持網站基本運作及優化用戶體驗）。</li>
+        </ul>
+      </section>
+
+      <!-- Section 3: 特別聲明：關於 AI 工具與您的數據 -->
+      <section class="privacy-section" id="section-3">
+        <h2><span class="section-num">3</span> 特別聲明：關於 AI 工具與您的數據</h2>
+        <p>作為一個探討 AI 時代焦慮的品牌，我們對您的數據運用保持最高透明度：</p>
+        <div class="privacy-highlight">
+          <p><strong>不作模型訓練：</strong>您在 PostAIAge 上輸入的任何個人困境、職涯描述或一對一對話記錄，絕對不會被我們出售或提供予第三方（如 OpenAI、Google 等）用於訓練其大型語言模型（LLM）。</p>
+        </div>
+        <p><strong>工具輔助性質：</strong>若我們網站內置 AI 互動評估工具，該數據傳輸僅限於為您即時生成專屬建議之單次用途（API 呼叫），不會作為長期演算法訓練的資料庫。</p>
+      </section>
+
+      <!-- Section 4: 收集個人資料的目的 -->
+      <section class="privacy-section" id="section-4">
+        <h2><span class="section-num">4</span> 收集個人資料的目的</h2>
+        <p>我們收集您的個人資料，將用於以下一項或多項合法目的：</p>
+        <ul>
+          <li>建立及管理您的 PostAIAge 用戶帳戶。</li>
+          <li>為您分析並提供量身定制的職涯過渡路徑、諮詢建議與內容。</li>
+          <li>處理您的查詢、投訴或提供客戶支援服務。</li>
+          <li>進行內部統計及數據分析，以改善我們的網站及服務質素（相關數據將作匿名化處理）。</li>
+          <li>在取得您的同意下，進行直接促銷（詳見第 6 節）。</li>
+        </ul>
+      </section>
+
+      <!-- Section 5: 資料的披露與轉移 -->
+      <section class="privacy-section" id="section-5">
+        <h2><span class="section-num">5</span> 資料的披露與轉移</h2>
+        <p>我們不會向任何無關的第三方出售或出租您的個人資料。在保密原則下，我們僅可能向以下各方披露您的資料：</p>
+        <ul>
+          <li>為我們提供網站寄存、數據庫管理、電子郵件發送、支付處理等後勤支援的第三方服務供應商（彼等同樣受保密協議約束）。</li>
+          <li>根據香港法例要求，或應法庭命令、執法機關的合法要求必須披露的機構。</li>
+        </ul>
+      </section>
+
+      <!-- Section 6: 直接促銷 -->
+      <section class="privacy-section" id="section-6">
+        <h2><span class="section-num">6</span> 直接促銷（Direct Marketing）</h2>
+        <p>
+          我們可能希望使用您的姓名及電郵地址，向您發送與 PostAIAge 相關的最新文章、活動資訊、課程或服務優惠。除非我們已取得您的明確同意（或表示不反對），否則我們不會將您的個人資料用於直接促銷。
+        </p>
+        <p>
+          如果您在註冊時同意接收，但日後改變主意，您可隨時點擊我們電郵底部的「取消訂閱（Unsubscribe）」連結，或透過下方的聯絡方式免費要求我們停止使用您的個人資料作直接促銷用途。
+        </p>
+      </section>
+
+      <!-- Section 7: 資料的保留與安全 -->
+      <section class="privacy-section" id="section-7">
+        <h2><span class="section-num">7</span> 資料的保留與安全</h2>
+        <p>
+          <strong>保留：</strong>我們只會在達致收集資料的原本目的（或任何直接相關目的）所需的時間內保留您的個人資料。當不再需要該等資料時，我們將根據內部指引將其安全銷毀或永久匿名化。
+        </p>
+        <p>
+          <strong>安全：</strong>我們採取切實可行的加密技術（如 SSL 傳輸層安全性協定）及存取控制措施，保護您的個人資料免受未經授權的查閱、處理、刪除或使用。
+        </p>
+      </section>
+
+      <!-- Section 8: 查閱及更正個人資料的權利 -->
+      <section class="privacy-section" id="section-8">
+        <h2><span class="section-num">8</span> 查閱及更正個人資料的權利</h2>
+        <p>根據《私隱條例》，您有權：</p>
+        <ul>
+          <li>查核我們是否持有您的個人資料，並要求查閱該等資料。</li>
+          <li>要求我們更正任何不準確的個人資料。</li>
+          <li>查明我們關於個人資料的政策及常規，並獲告知我們所持有的個人資料種類。</li>
+        </ul>
+        <p>如欲行使上述權利，或對本私隱政策有任何疑問，請將您的書面要求發送至我們的保障資料主任（Data Protection Officer）：</p>
+        <div class="privacy-contact">
+          <p><strong>電郵：</strong><a href="mailto:dpo@postaiage.com">dpo@postaiage.com</a></p>
+          <p style="font-size: 0.9rem; color: var(--text-light); margin-top: 8px;">我們有權根據法例規定，就處理查閱資料的要求收取合理的行政費用。</p>
+        </div>
+      </section>
+
+      <!-- Section 9: 政策更新 -->
+      <section class="privacy-section" id="section-9">
+        <h2><span class="section-num">9</span> 政策更新</h2>
+        <p>
+          我們保留隨時修改本私隱政策聲明的權利。任何重大更改將透過網站公告或電子郵件通知您。繼續使用我們的服務，即表示您接受更新後的條款。
+        </p>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="footer">
+    <div class="container">
+      <ul class="footer-links">
+        <li><a href="index.html">主頁</a></li>
+        <li><a href="index.html#paradigm">核心主張</a></li>
+        <li><a href="privacy.html">私隱政策</a></li>
+        <li><a href="terms.html">服務條款</a></li>
+        <li><a href="mailto:dpo@postaiage.com">聯絡我們</a></li>
+      </ul>
+      <p class="footer-copy">&copy; 2026 PostAIAge. All rights reserved. 擁抱科技，堅守人性。</p>
+    </div>
+  </footer>
+
+  <!-- ===== Navbar Shadow on Scroll ===== -->
+  <script>
+    (function() {
+      var navbar = document.getElementById('navbar');
+      window.addEventListener('scroll', function() {
+        if (window.scrollY > 10) {
+          navbar.style.boxShadow = '0 2px 20px rgba(44,36,22,0.06)';
+        } else {
+          navbar.style.boxShadow = '';
+        }
+      });
+    })();
+  </script>
+
+</body>
+</html>
