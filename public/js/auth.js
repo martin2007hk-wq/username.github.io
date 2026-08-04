@@ -38,25 +38,11 @@ window.logout = async () => {
   }
 };
 
-// 監聽注冊狀態，切換 UI
+// 監聽注冊狀態（navbar 已無 auth UI，僅 log）
 onAuthStateChanged(auth, (user) => {
-  const loginBtn = document.getElementById('auth-login-btn');
-  const userInfo = document.getElementById('auth-user-info');
-  const avatar   = document.getElementById('auth-avatar');
-  const nameSpan = document.getElementById('auth-name');
-
   if (user) {
-    // 已注冊：隱藏注冊掣，顯示用户頭像 + 名稱 + 登出
-    if (loginBtn) loginBtn.style.display = 'none';
-    if (userInfo) userInfo.style.display = 'flex';
-    if (avatar) {
-      avatar.src = user.photoURL || '';
-      avatar.alt = user.displayName || '';
-    }
-    if (nameSpan) nameSpan.textContent = user.displayName || user.email;
+    console.log('PostAIAge: 用户已登入', user.displayName || user.email);
   } else {
-    // 未注冊：顯示注冊掣，隱藏用户資訊
-    if (loginBtn) loginBtn.style.display = 'inline-flex';
-    if (userInfo) userInfo.style.display = 'none';
+    console.log('PostAIAge: 用户未登入');
   }
 });
