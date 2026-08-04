@@ -351,6 +351,7 @@ a:hover { color: #4A7D89; }
 }
 .cta-form {
   display: flex; align-items: center; justify-content: center;
+  flex-wrap: wrap;
   gap: 12px; max-width: 520px; margin: 0 auto;
 }
 .cta-form input[type="email"] {
@@ -364,6 +365,20 @@ a:hover { color: #4A7D89; }
   border-color: var(--accent);
 }
 .cta-form input[type="email"]::placeholder {
+  color: var(--text-light);
+}
+.cta-form textarea {
+  width: 100%; flex-basis: 100%;
+  padding: 14px 20px; font-size: 0.95rem;
+  font-family: inherit; border: 2px solid var(--border);
+  border-radius: var(--radius); background: #FFFDF7;
+  color: var(--text); outline: none; resize: vertical;
+  transition: border-color 0.25s ease;
+}
+.cta-form textarea:focus {
+  border-color: var(--accent);
+}
+.cta-form textarea::placeholder {
   color: var(--text-light);
 }
 .cta-form .btn { flex-shrink: 0; }
