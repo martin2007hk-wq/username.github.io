@@ -38,7 +38,7 @@ window.loginWithGoogle = async () => {
 /**
  * Google login for early-bird plan registration.
  * Called by earlybird.js submitGoogleRegistration().
- * Does NOT redirect to /thanks; instead records registration and closes modal.
+ * Redirects to /thanks with plan, name, avatar and uid params.
  * @param {'A'|'B'} plan
  */
 window.loginWithGoogleForPlan = async (plan) => {
@@ -54,16 +54,13 @@ window.loginWithGoogleForPlan = async (plan) => {
       window.recordRegistration(plan, 'google', null);
     }
 
-    // Close the early-bird modal
-    if (typeof window.closeModal === 'function') {
-      window.closeModal();
-    }
-
-    // Show success toast
-    const displayName = user.displayName || user.email || '新用戶';
-    if (typeof window.showToast === 'function') {
-      window.showToast('🎉 登記成功！歡迎加入，' + displayName + '！我哋會喺服務上線時通知你。', 'success');
-    }
+    const params = new URLSearchParams();
+    params.set('plan', plan);
+    params.set('method', 'google');
+    params.set('name', user.displayName || 'Early Bird');
+    params.set('avatar', user.photoURL || '');
+    params.set('uid', user.uid);
+    window.location.href = '/thanks?' + params.toString();
 
     // Clear the pending plan flag
     delete window._earlyBirdPendingPlan;

@@ -101,7 +101,7 @@
   // ── Email Registration (Modal) ─────────────────────────────
 
   /**
-   * Validate email from modal, record registration, show toast, close modal.
+   * Validate email from modal, record registration, redirect to /thanks.
    * Uses the modal's unique input ID: earlyBirdEmailModal
    */
   function submitEmailRegistration() {
@@ -131,15 +131,15 @@
       window.recordRegistration(selectedPlan, 'email', email);
     }
 
-    showToast('🎉 登記成功！我哋會喺服務上線時通知你。', 'success');
-    closeModal();
+    const name = email.split('@')[0];
+    window.location.href = '/thanks?plan=' + encodeURIComponent(selectedPlan) + '&method=email&name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email);
   }
 
   // ── Google Registration ────────────────────────────────────
 
   /**
    * Delegate to auth.js loginWithGoogleForPlan, which handles
-   * Firebase popup → recordRegistration → closeModal → toast.
+   * Firebase popup → recordRegistration → redirect /thanks.
    */
   function submitGoogleRegistration() {
     if (!selectedPlan) {
@@ -196,6 +196,7 @@
 
   /**
    * Submit email registration from inline bottom section.
+   * Redirects to /thanks on success.
    */
   function submitEmailRegistrationInline() {
     var emailInputEl = document.getElementById('earlyBirdEmail');
@@ -213,20 +214,14 @@
     if (typeof window.recordRegistration === 'function') {
       window.recordRegistration(selectedPlanInline, 'email', email);
     }
-    showToast('🎉 登記成功！我哋會喺服務上線時通知你。', 'success');
 
-    // Reset
-    if (emailInputEl) emailInputEl.value = '';
-    var regArea = document.getElementById('registrationArea');
-    if (regArea) regArea.style.display = 'none';
-    document.querySelectorAll('.plan-card-inline').forEach(function (c) {
-      c.classList.remove('plan-card-inline--selected');
-    });
-    selectedPlanInline = null;
+    const name = email.split('@')[0];
+    window.location.href = '/thanks?plan=' + encodeURIComponent(selectedPlanInline) + '&method=email&name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email);
   }
 
   /**
    * Submit Google registration from inline bottom section.
+   * Delegates to auth.js loginWithGoogleForPlan, which redirects to /thanks.
    */
   function submitGoogleRegistrationInline() {
     if (!selectedPlanInline) {
@@ -235,17 +230,7 @@
     }
 
     if (typeof window.loginWithGoogleForPlan === 'function') {
-      // Pass plan to auth handler; it will call recordRegistration + showToast + reset
-      window._earlyBirdSelectedPlan = selectedPlanInline;
       window.loginWithGoogleForPlan(selectedPlanInline);
-
-      // Reset UI after auth callback
-      var regArea = document.getElementById('registrationArea');
-      if (regArea) regArea.style.display = 'none';
-      document.querySelectorAll('.plan-card-inline').forEach(function (c) {
-        c.classList.remove('plan-card-inline--selected');
-      });
-      selectedPlanInline = null;
     } else {
       showToast('Google 登入暫時無法使用，請用 Email 登記', 'error');
     }

@@ -3,79 +3,164 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>多謝加入！ — PostAIAge</title>
-  <meta name="description" content="你已成功加入 PostAIAge 早鳥過渡計畫">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <title>登記成功 | PostAIAge</title>
   <link rel="stylesheet" href="css/style.css">
   <style>
-    .thanks-page {
-      display: flex; align-items: center; justify-content: center;
-      min-height: 100vh; padding: 48px 24px;
-      position: relative; overflow: hidden;
-    }
-    .thanks-glow {
-      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-      width: 600px; height: 600px;
-      background: radial-gradient(circle, rgba(232,168,80,0.10) 0%, rgba(250,247,242,0) 70%);
-      border-radius: 50%; pointer-events: none; z-index: 0;
+    .thanks-container {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 100%);
     }
     .thanks-card {
-      position: relative; z-index: 1;
-      text-align: center;
-      background: var(--bg-card);
-      border-radius: var(--radius-lg);
-      padding: 64px 48px;
-      max-width: 540px; width: 100%;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-card);
-      animation: thanksFadeIn 0.6s ease;
+      background: #fff;
+      border-radius: 20px;
+      padding: 3rem 2rem;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+      animation: fadeSlideIn 0.5s ease;
     }
-    @keyframes thanksFadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
+    .thanks-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 1rem;
+      border: 3px solid #2563eb;
     }
-    .thanks-icon {
-      font-size: 4rem; margin-bottom: 20px; display: block;
+    .thanks-avatar-placeholder {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #2563eb;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 700;
+      margin: 0 auto 1rem;
     }
-    .thanks-title {
-      font-size: clamp(1.6rem, 4vw, 2.2rem);
-      font-weight: 700; color: var(--text); margin-bottom: 12px;
-      line-height: 1.4;
+    .thanks-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0 0 0.25rem;
     }
-    .thanks-main {
-      font-size: 1.1rem; color: var(--text-muted);
-      margin-bottom: 8px; line-height: 1.8;
+    .thanks-email {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+    .thanks-badge {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+    .thanks-badge--planA {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+    .thanks-badge--planB {
+      background: #fce4ec;
+      color: #c62828;
+    }
+    .thanks-message {
+      font-size: 1.1rem;
+      color: #333;
+      margin-bottom: 0.5rem;
     }
     .thanks-sub {
-      font-size: 0.95rem; color: var(--text-light);
-      margin-bottom: 36px; line-height: 1.7;
+      color: #888;
+      font-size: 0.85rem;
+      margin-bottom: 2rem;
     }
-    .thanks-divider {
-      width: 60px; height: 2px; background: var(--accent);
-      border-radius: 2px; margin: 0 auto 32px;
-      opacity: 0.5;
+    .thanks-back {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      background: #2563eb;
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: filter 0.2s;
+    }
+    .thanks-back:hover {
+      filter: brightness(1.1);
+    }
+    @keyframes fadeSlideIn {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
-
-  <div class="thanks-page">
-    <div class="thanks-glow"></div>
+  <div class="thanks-container">
     <div class="thanks-card">
-      <span class="thanks-icon">🎉</span>
-      <h1 class="thanks-title">多謝加入！</h1>
-      <p class="thanks-main">你已成功加入 PostAIAge 早鳥過渡計畫</p>
-      <p class="thanks-sub">項目正在全力籌備中，上線時會第一時間通知你！</p>
-      <div class="thanks-divider"></div>
-      <a href="index" class="btn btn-primary">
-        <span class="material-icons" style="font-size:1.1rem;">arrow_back</span>
-        返回主頁
-      </a>
+      <!-- Avatar: Google users get real photo, Email users get initial -->
+      <div id="thanksAvatar"></div>
+      <h2 class="thanks-name" id="thanksName"></h2>
+      <p class="thanks-email" id="thanksEmail"></p>
+      <div id="thanksBadge"></div>
+      <p class="thanks-message" id="thanksMessage"></p>
+      <p class="thanks-sub">我哋會喺服務上線時第一時間通知你。Stay tuned! 🚀</p>
+      <a href="/" class="thanks-back">返回主頁</a>
     </div>
   </div>
 
+  <script>
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const plan = params.get('plan') || 'A';
+      const method = params.get('method') || 'email';
+      const name = params.get('name') || 'Early Bird';
+      const email = params.get('email') || '';
+      const avatar = params.get('avatar') || '';
+
+      // Avatar
+      const avatarContainer = document.getElementById('thanksAvatar');
+      if (avatar) {
+        avatarContainer.innerHTML = '<img src="' + avatar + '" alt="' + name + '" class="thanks-avatar" referrerpolicy="no-referrer">';
+      } else {
+        const initial = name.charAt(0).toUpperCase();
+        avatarContainer.innerHTML = '<div class="thanks-avatar-placeholder">' + initial + '</div>';
+      }
+
+      // Name
+      document.getElementById('thanksName').textContent = '歡迎加入，' + name + '！';
+
+      // Email (only for email method)
+      if (email) {
+        document.getElementById('thanksEmail').textContent = email;
+      } else {
+        document.getElementById('thanksEmail').style.display = 'none';
+      }
+
+      // Badge
+      const badge = document.getElementById('thanksBadge');
+      if (plan === 'B') {
+        badge.className = 'thanks-badge thanks-badge--planB';
+        badge.textContent = '🔥 限量早鳥資格已鎖定';
+      } else {
+        badge.className = 'thanks-badge thanks-badge--planA';
+        badge.textContent = '📩 上線通知已登記';
+      }
+
+      // Message
+      const msg = document.getElementById('thanksMessage');
+      if (plan === 'B') {
+        msg.textContent = '你已成功鎖定 6 折最低價同所有早鳥權益！';
+      } else {
+        msg.textContent = '服務上線時你會第一時間收到 8 折優惠碼！';
+      }
+    })();
+  </script>
 </body>
 </html>
