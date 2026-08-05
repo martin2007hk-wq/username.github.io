@@ -126,9 +126,20 @@
       return;
     }
 
-    // Record registration
+    // Record registration (localStorage)
     if (typeof window.recordRegistration === 'function') {
       window.recordRegistration(selectedPlan, 'email', email);
+    }
+
+    // Write to Firestore before redirect
+    if (typeof window.writeToFirestore === 'function') {
+      window.writeToFirestore({
+        plan: selectedPlan,
+        method: 'email',
+        name: email.split('@')[0],
+        email: email,
+        source: 'modal'
+      });
     }
 
     const name = email.split('@')[0];
@@ -148,7 +159,7 @@
     }
 
     if (typeof window.loginWithGoogleForPlan === 'function') {
-      window.loginWithGoogleForPlan(selectedPlan);
+      window.loginWithGoogleForPlan(selectedPlan, 'modal');
     } else {
       showToast('Google 登入功能暫時無法使用，請嘗試 Email 登記。', 'error');
     }
@@ -215,6 +226,17 @@
       window.recordRegistration(selectedPlanInline, 'email', email);
     }
 
+    // Write to Firestore before redirect
+    if (typeof window.writeToFirestore === 'function') {
+      window.writeToFirestore({
+        plan: selectedPlanInline,
+        method: 'email',
+        name: email.split('@')[0],
+        email: email,
+        source: 'inline'
+      });
+    }
+
     const name = email.split('@')[0];
     window.location.href = '/thanks?plan=' + encodeURIComponent(selectedPlanInline) + '&method=email&name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email);
   }
@@ -230,7 +252,7 @@
     }
 
     if (typeof window.loginWithGoogleForPlan === 'function') {
-      window.loginWithGoogleForPlan(selectedPlanInline);
+      window.loginWithGoogleForPlan(selectedPlanInline, 'inline');
     } else {
       showToast('Google 登入暫時無法使用，請用 Email 登記', 'error');
     }

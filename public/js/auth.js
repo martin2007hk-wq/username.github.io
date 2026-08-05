@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBP7BlQVl4m5XUeWt6lTxYu3I1PAsbZavI",
@@ -14,8 +15,44 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
+const db = getFirestore(app);
 
 let _isNewSignIn = false;
+
+// ── Firestore Write ────────────────────────────────────────
+
+/**
+ * Write registration data to Firestore (non-blocking).
+ * Fails silently — never blocks redirect to /thanks.
+ * @param {{ plan: string, method: string, name: string, email: string|null, avatar: string|null, uid: string|null, source: string }} data
+ */
+window.writeToFirestore = function (data) {
+  try {
+    const docData = {
+      plan: data.plan,
+      method: data.method,
+      name: data.name,
+      email: data.email || null,
+      avatar: data.avatar || null,
+      uid: data.uid || null,
+      source: data.source || 'inline',
+      timestamp: serverTimestamp(),
+      createdAt: new Date().toISOString()
+    };
+
+    addDoc(collection(db, 'registrations'), docData)
+      .then(function (docRef) {
+        console.log('Registration written to Firestore:', docRef.id);
+      })
+      .catch(function (error) {
+        console.error('Firestore write failed:', error);
+        // Silent failure — don't block redirect
+      });
+  } catch (e) {
+    console.error('Firestore writeToFirestore error:', e);
+    // Silent failure
+  }
+};
 
 // Google 注冊
 window.loginWithGoogle = async () => {
@@ -37,11 +74,12 @@ window.loginWithGoogle = async () => {
 
 /**
  * Google login for early-bird plan registration.
- * Called by earlybird.js submitGoogleRegistration().
+ * Called by earlybird.js submitGoogleRegistration() / submitGoogleRegistrationInline().
  * Redirects to /thanks with plan, name, avatar and uid params.
  * @param {'A'|'B'} plan
+ * @param {'modal'|'inline'} source - which UI triggered the registration (default: 'inline')
  */
-window.loginWithGoogleForPlan = async (plan) => {
+window.loginWithGoogleForPlan = async (plan, source) => {
   try {
     // Set flag so loginWithGoogle knows not to redirect
     window._earlyBirdPendingPlan = plan;
@@ -49,10 +87,21 @@ window.loginWithGoogleForPlan = async (plan) => {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
 
-    // Record registration via tracker
+    // Record registration via tracker (localStorage)
     if (typeof window.recordRegistration === 'function') {
       window.recordRegistration(plan, 'google', null);
     }
+
+    // Write to Firestore before redirect
+    window.writeToFirestore({
+      plan: plan,
+      method: 'google',
+      name: user.displayName || 'Early Bird',
+      email: user.email || null,
+      avatar: user.photoURL || null,
+      uid: user.uid,
+      source: source || 'inline'
+    });
 
     const params = new URLSearchParams();
     params.set('plan', plan);
