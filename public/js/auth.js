@@ -22,9 +22,11 @@ let _isNewSignIn = false;
 // ── Firestore Write ────────────────────────────────────────
 
 /**
- * Write registration data to Firestore (non-blocking).
+ * Write registration data to Firestore.
+ * Returns a Promise so callers can await the write before redirecting.
  * Fails silently — never blocks redirect to /thanks.
  * @param {{ plan: string, method: string, name: string, email: string|null, avatar: string|null, uid: string|null, source: string }} data
+ * @returns {Promise}
  */
 window.writeToFirestore = function (data) {
   try {
@@ -40,17 +42,21 @@ window.writeToFirestore = function (data) {
       createdAt: new Date().toISOString()
     };
 
-    addDoc(collection(db, 'registrations'), docData)
+    // Return the promise so callers can await the write before redirecting
+    return addDoc(collection(db, 'registrations'), docData)
       .then(function (docRef) {
         console.log('Registration written to Firestore:', docRef.id);
+        return docRef;
       })
       .catch(function (error) {
         console.error('Firestore write failed:', error);
         // Silent failure — don't block redirect
+        return null;
       });
   } catch (e) {
     console.error('Firestore writeToFirestore error:', e);
     // Silent failure
+    return Promise.resolve(null);
   }
 };
 
@@ -75,7 +81,7 @@ window.loginWithGoogle = async () => {
 /**
  * Google login for early-bird plan registration.
  * Called by earlybird.js submitGoogleRegistration() / submitGoogleRegistrationInline().
- * Redirects to /thanks with plan, name, avatar and uid params.
+ * Awaits Firestore write before redirecting to /thanks with plan, name, avatar and uid params.
  * @param {'A'|'B'} plan
  * @param {'modal'|'inline'} source - which UI triggered the registration (default: 'inline')
  */
@@ -92,8 +98,8 @@ window.loginWithGoogleForPlan = async (plan, source) => {
       window.recordRegistration(plan, 'google', null);
     }
 
-    // Write to Firestore before redirect
-    window.writeToFirestore({
+    // Write to Firestore and AWAIT completion before redirect
+    await window.writeToFirestore({
       plan: plan,
       method: 'google',
       name: user.displayName || 'Early Bird',

@@ -131,19 +131,23 @@
       window.recordRegistration(selectedPlan, 'email', email);
     }
 
-    // Write to Firestore before redirect
+    // Write to Firestore and await before redirect
+    const name = email.split('@')[0];
+    const redirect = function () {
+      window.location.href = '/thanks?plan=' + encodeURIComponent(selectedPlan) + '&method=email&name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email);
+    };
+
     if (typeof window.writeToFirestore === 'function') {
       window.writeToFirestore({
         plan: selectedPlan,
         method: 'email',
-        name: email.split('@')[0],
+        name: name,
         email: email,
         source: 'modal'
-      });
+      }).then(redirect).catch(redirect);
+    } else {
+      redirect();
     }
-
-    const name = email.split('@')[0];
-    window.location.href = '/thanks?plan=' + encodeURIComponent(selectedPlan) + '&method=email&name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email);
   }
 
   // ── Google Registration ────────────────────────────────────
@@ -226,19 +230,23 @@
       window.recordRegistration(selectedPlanInline, 'email', email);
     }
 
-    // Write to Firestore before redirect
+    // Write to Firestore and await before redirect
+    const name = email.split('@')[0];
+    const redirect = function () {
+      window.location.href = '/thanks?plan=' + encodeURIComponent(selectedPlanInline) + '&method=email&name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email);
+    };
+
     if (typeof window.writeToFirestore === 'function') {
       window.writeToFirestore({
         plan: selectedPlanInline,
         method: 'email',
-        name: email.split('@')[0],
+        name: name,
         email: email,
         source: 'inline'
-      });
+      }).then(redirect).catch(redirect);
+    } else {
+      redirect();
     }
-
-    const name = email.split('@')[0];
-    window.location.href = '/thanks?plan=' + encodeURIComponent(selectedPlanInline) + '&method=email&name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email);
   }
 
   /**
