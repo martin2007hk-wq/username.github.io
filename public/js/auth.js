@@ -12,10 +12,11 @@ const firebaseConfig = {
   measurementId: "G-C6MJ56Y0LR"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+export const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+
 const provider = new GoogleAuthProvider();
-const db = getFirestore(app);
 
 let _isNewSignIn = false;
 
@@ -24,7 +25,6 @@ let _isNewSignIn = false;
 /**
  * Write registration data to Firestore.
  * Returns a Promise so callers can await the write before redirecting.
- * Fails silently — never blocks redirect to /thanks.
  * @param {{ plan: string, method: string, name: string, email: string|null, avatar: string|null, uid: string|null, source: string }} data
  * @returns {Promise}
  */
@@ -42,7 +42,6 @@ window.writeToFirestore = function (data) {
       createdAt: new Date().toISOString()
     };
 
-    // Return the promise so callers can await the write before redirecting
     return addDoc(collection(db, 'registrations'), docData)
       .then(function (docRef) {
         console.log('Registration written to Firestore:', docRef.id);
@@ -50,12 +49,10 @@ window.writeToFirestore = function (data) {
       })
       .catch(function (error) {
         console.error('Firestore write failed:', error);
-        // Silent failure — don't block redirect
         return null;
       });
   } catch (e) {
     console.error('Firestore writeToFirestore error:', e);
-    // Silent failure
     return Promise.resolve(null);
   }
 };
@@ -65,10 +62,7 @@ window.loginWithGoogle = async () => {
   try {
     _isNewSignIn = true;
     const result = await signInWithPopup(auth, provider);
-    // If called from navbar/standalone, redirect to thanks
-    // If there's a pending plan selection (set by loginWithGoogleForPlan), skip redirect
     if (window._earlyBirdPendingPlan) {
-      // Handled by loginWithGoogleForPlan — do not redirect
       return result;
     }
     window.location.href = '/thanks';
@@ -80,25 +74,20 @@ window.loginWithGoogle = async () => {
 
 /**
  * Google login for early-bird plan registration.
- * Called by earlybird.js submitGoogleRegistration() / submitGoogleRegistrationInline().
- * Awaits Firestore write before redirecting to /thanks with plan, name, avatar and uid params.
  * @param {'A'|'B'} plan
- * @param {'modal'|'inline'} source - which UI triggered the registration (default: 'inline')
+ * @param {'modal'|'inline'} source
  */
 window.loginWithGoogleForPlan = async (plan, source) => {
   try {
-    // Set flag so loginWithGoogle knows not to redirect
     window._earlyBirdPendingPlan = plan;
 
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
 
-    // Record registration via tracker (localStorage)
     if (typeof window.recordRegistration === 'function') {
       window.recordRegistration(plan, 'google', null);
     }
 
-    // Write to Firestore and AWAIT completion before redirect
     await window.writeToFirestore({
       plan: plan,
       method: 'google',
@@ -117,7 +106,6 @@ window.loginWithGoogleForPlan = async (plan, source) => {
     params.set('uid', user.uid);
     window.location.href = '/thanks?' + params.toString();
 
-    // Clear the pending plan flag
     delete window._earlyBirdPendingPlan;
   } catch (error) {
     delete window._earlyBirdPendingPlan;
@@ -137,11 +125,22 @@ window.logout = async () => {
   }
 };
 
-// 監聽注冊狀態（navbar 已無 auth UI，僅 log）
+// 監聽注冊狀態
 onAuthStateChanged(auth, (user) => {
   if (user) {
     console.log('PostAIAge: 用户已登入', user.displayName || user.email);
+    // Notify chat system of auth state change
+    window.dispatchEvent(new CustomEvent('postaiage:authchange', {
+      detail: { user }
+    }));
   } else {
     console.log('PostAIAge: 用户未登入');
+    window.dispatchEvent(new CustomEvent('postaiage:authchange', {
+      detail: { user: null }
+    }));
   }
 });
+
+// ── Legacy global references (for non-module scripts) ──
+window._firebaseAuth = auth;
+window._firebaseDb = db;

@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/chat.css">
 </head>
 <body>
 
@@ -230,13 +231,97 @@
     </div>
   </footer>
 
+  <!-- ===== Chat Widget ===== -->
+  <!-- Floating Action Button -->
+  <button class="chat-fab" id="chatFab" aria-label="開啟聊天">
+    💬
+    <span class="badge" id="chatBadge"></span>
+  </button>
+
+  <!-- Chat Panel -->
+  <div class="chat-panel hidden" id="chatPanel" aria-hidden="true">
+    <div class="chat-header">
+      <div class="chat-header-info">
+        <div class="chat-header-avatar" id="chatHeaderAvatar"></div>
+        <div>
+          <div class="chat-header-name" id="chatHeaderName">Chat</div>
+          <div class="chat-header-status" id="chatHeaderStatus"></div>
+        </div>
+      </div>
+      <button class="chat-close-btn" id="chatCloseBtn" aria-label="關閉聊天">&times;</button>
+    </div>
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-empty">
+        <span class="chat-empty-icon">💬</span>
+        <p class="chat-empty-text">尚未開始對話</p>
+        <p class="chat-empty-sub">請從社區頁面選擇一位成員開始聊天</p>
+      </div>
+    </div>
+    <div class="chat-input-area">
+      <textarea
+        class="chat-input"
+        id="chatInput"
+        rows="1"
+        placeholder="輸入訊息..."
+        maxlength="5000"
+      ></textarea>
+      <button class="chat-send-btn" id="chatSendBtn" aria-label="發送訊息">➤</button>
+    </div>
+  </div>
+
   <!-- ===== Firebase Auth Module ===== -->
   <script type="module" src="js/auth.js"></script>
+  <script type="module" src="js/chat.js"></script>
 
   <!-- ===== Scripts ===== -->
+  <script src="js/cookies.js"></script>
   <script src="js/tracker.js"></script>
   <script src="js/earlybird.js"></script>
   <script src="js/main.js"></script>
+
+  <!-- Cookie Consent Banner -->
+  <div class="cookie-banner" id="cookieBanner" role="dialog" aria-label="Cookie consent" aria-hidden="true">
+    <p>🍪 本網站使用 cookies 來改善你的瀏覽體驗、分析流量同記住你的偏好。繼續使用即表示你同意。<br><small>We use cookies for analytics, preferences and session memory. By continuing you consent.</small></p>
+    <div class="cookie-banner-actions">
+      <button class="btn btn-primary btn-sm" onclick="acceptCookies()">接受全部</button>
+      <button class="btn btn-outline btn-sm" onclick="acceptEssentialCookies()">只接受必要</button>
+    </div>
+  </div>
+
+  <script>
+    // Cookie consent logic
+    (function() {
+      var banner = document.getElementById('cookieBanner');
+      if (!banner) return;
+
+      // Check if consent already given
+      if (window.PostAIAgeCookies && window.PostAIAgeCookies.isCookieConsentGiven && window.PostAIAgeCookies.isCookieConsentGiven()) {
+        banner.style.display = 'none';
+        banner.setAttribute('aria-hidden', 'true');
+        return;
+      }
+
+      // Show banner
+      banner.style.display = 'block';
+      banner.setAttribute('aria-hidden', 'false');
+
+      window.acceptCookies = function() {
+        if (window.PostAIAgeCookies) {
+          window.PostAIAgeCookies.setPreference('cookieConsent', 'all');
+        }
+        banner.style.display = 'none';
+        banner.setAttribute('aria-hidden', 'true');
+      };
+
+      window.acceptEssentialCookies = function() {
+        if (window.PostAIAgeCookies) {
+          window.PostAIAgeCookies.setPreference('cookieConsent', 'essential');
+        }
+        banner.style.display = 'none';
+        banner.setAttribute('aria-hidden', 'true');
+      };
+    })();
+  </script>
 
   <!-- Early Bird Modal -->
   <div class="modal-overlay" id="earlyBirdModal" aria-hidden="true">

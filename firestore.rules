@@ -1,12 +1,143 @@
 rules_version = '2';
 service cloud.firestore {
-  match /databases/(default)/documents {
+  match /databases/{database}/documents {
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Helper Functions
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+    // Check user is authenticated
+    function isAuth() {
+      return request.auth != null;
+    }
+
+    // Check if the current user is a participant of a chat
+    // chatId format: "uid1_uid2" (sorted)
+    function isParticipant(chatId) {
+      return isAuth()
+        && chatId.split('_').hasAny([request.auth.uid]);
+    }
+
+    // Validate incoming message text (1-5000 chars)
+    function isValidMessageText() {
+      let text = request.resource.data.text;
+      return text is string
+        && text.size() >= 1
+        && text.size() <= 5000;
+    }
+
+    // Validate message type
+    function isValidMessageType() {
+      let msgType = request.resource.data.type;
+      return msgType is string
+        && msgType in ['text', 'system'];
+    }
+
+    // Validate from field matches authenticated user
+    function isOwnMessage() {
+      return request.resource.data.from == request.auth.uid;
+    }
+
+    // Validate createdAt is server-forced (can't be faked)
+    function isServerTimestamp() {
+      return request.resource.data.createdAt == request.time;
+    }
+
+    // Validate participants array (exactly 2, sorted, includes current user)
+    function isValidParticipants() {
+      let p = request.resource.data.participants;
+      return p is list
+        && p.size() == 2
+        && p[0] is string
+        && p[1] is string
+        && p[0] != p[1]
+        && p.hasAny([request.auth.uid]);
+    }
+
+    // Rate limit: 2-second cooldown between messages
+    function isNotTooFast(uid, chatId) {
+      let rateDoc = get(/databases/$(database)/documents/rateLimits/$(uid)_$(chatId));
+      return !rateDoc.data.exists()
+        || request.time >= rateDoc.data.lastMessageAt + duration.time(2, 's');
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Existing: Registrations (unchanged)
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     match /registrations/{docId} {
       allow create: if request.resource.data.plan is string
                     && request.resource.data.method is string
                     && request.resource.data.name is string;
       allow read, update, delete: if false;
     }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Chats Collection
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    match /chats/{chatId} {
+
+      // ── Chat Document ──────────────────
+      allow create: if isAuth()
+        && isValidParticipants()
+        && request.resource.data.createdBy == request.auth.uid
+        && request.resource.data.createdAt == request.time;
+
+      allow read: if isParticipant(chatId);
+
+      // Allow updating lastMessage* fields only
+      allow update: if isParticipant(chatId)
+        && request.resource.data.participants == resource.data.participants
+        && request.resource.data.createdBy == resource.data.createdBy
+        && request.resource.data.createdAt == resource.data.createdAt;
+
+      allow delete: if false;
+
+      // ── Messages Subcollection ─────────
+      match /messages/{messageId} {
+
+        allow create: if isAuth()
+          && isParticipant(chatId)
+          && isOwnMessage()
+          && isValidMessageText()
+          && isValidMessageType()
+          && isServerTimestamp()
+          && isNotTooFast(request.auth.uid, chatId);
+
+        allow read: if isParticipant(chatId);
+
+        // Messages are immutable once sent
+        allow update, delete: if false;
+      }
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Rate Limits Collection
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    match /rateLimits/{docId} {
+      allow create: if isAuth()
+        && docId.split('_')[0] == request.auth.uid;
+
+      allow update: if isAuth()
+        && docId.split('_')[0] == request.auth.uid;
+
+      allow read: if isAuth()
+        && docId.split('_')[0] == request.auth.uid;
+
+      allow delete: if false;
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Users Collection (public profiles)
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    match /users/{uid} {
+      allow read: if isAuth();
+      allow create, update: if isAuth() && request.auth.uid == uid;
+      allow delete: if false;
+    }
+
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Default Deny (catch-all)
+    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     match /{document=**} {
       allow read, write: if false;
     }
