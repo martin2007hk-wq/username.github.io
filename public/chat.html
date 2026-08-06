@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat — PostAIAge</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💬</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/chat.css">
+  <link rel="stylesheet" href="css/chat-page.css?v=1">
+</head>
+<body class="chat-page-body">
+
+  <!-- ===== Navbar (minimal) ===== -->
+  <nav class="chat-navbar">
+    <a href="/" class="chat-nav-logo">← PostAIAge</a>
+    <div class="chat-nav-user" id="chatNavUser">
+      <span id="chatNavUserName"></span>
+      <img id="chatNavUserAvatar" src="" alt="" style="display:none;">
+    </div>
+  </nav>
+
+  <!-- ===== Chat Layout ===== -->
+  <div class="chat-layout">
+    <!-- Sidebar: User List -->
+    <aside class="chat-sidebar" id="chatSidebar">
+      <div class="chat-sidebar-header">
+        <h2>社區成員</h2>
+        <span class="chat-sidebar-count" id="userCount"></span>
+      </div>
+      <div class="chat-sidebar-search">
+        <input type="text" id="userSearch" placeholder="搜尋成員..." autocomplete="off">
+      </div>
+      <div class="chat-user-list" id="chatUserList">
+        <div class="chat-user-list-empty">載入中...</div>
+      </div>
+    </aside>
+
+    <!-- Main Chat Area -->
+    <main class="chat-main" id="chatMain">
+      <!-- Empty State -->
+      <div class="chat-main-empty" id="chatMainEmpty">
+        <div class="chat-main-empty-icon">💬</div>
+        <h2>選擇一位社區成員開始對話</h2>
+        <p>從左邊的成員列表中選擇你想聊天的對象</p>
+      </div>
+
+      <!-- Active Chat Panel (hidden until user selected) -->
+      <div class="chat-panel-page hidden" id="chatPanelPage">
+        <div class="chat-header">
+          <div class="chat-header-info">
+            <div class="chat-header-avatar" id="chatHeaderAvatar"></div>
+            <div>
+              <div class="chat-header-name" id="chatHeaderName">Chat</div>
+              <div class="chat-header-status" id="chatHeaderStatus"></div>
+            </div>
+          </div>
+          <button class="chat-close-btn" id="chatCloseBtn" aria-label="關閉聊天">&times;</button>
+        </div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-area">
+          <textarea
+            class="chat-input"
+            id="chatInput"
+            rows="1"
+            placeholder="輸入訊息..."
+            maxlength="5000"
+          ></textarea>
+          <button class="chat-send-btn" id="chatSendBtn" aria-label="發送訊息">➤</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Firebase Auth Module -->
+  <script type="module" src="js/auth.js?v=4"></script>
+  <!-- Chat Page Logic -->
+  <script type="module" src="js/chat-page.js?v=1"></script>
+
+</body>
+</html>

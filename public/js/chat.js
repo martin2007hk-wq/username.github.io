@@ -40,7 +40,15 @@ const COOLDOWN_MS = 2000; // 2-second client-side cooldown
 // ChatManager Class
 // ─────────────────────────────────────────
 class ChatManager {
-  constructor() {
+  /**
+   * @param {object} [opts]
+   * @param {string} [opts.panelId='chatPanel'] - The DOM ID of the chat panel
+   * @param {string} [opts.fabId='chatFab'] - The DOM ID of the FAB button
+   */
+  constructor(opts = {}) {
+    this._panelId = opts.panelId || 'chatPanel';
+    this._fabId = opts.fabId || 'chatFab';
+
     this.unsubscribers = new Map();
     this.currentChatId = null;
     this.currentOtherUid = null;
@@ -87,9 +95,9 @@ class ChatManager {
   }
 
   _setup() {
-    // Cache DOM elements
-    this.panel = document.getElementById('chatPanel');
-    this.fab = document.getElementById('chatFab');
+    // Cache DOM elements (use configurable panel/fab IDs)
+    this.panel = document.getElementById(this._panelId);
+    this.fab = document.getElementById(this._fabId);
     this.messagesEl = document.getElementById('chatMessages');
     this.inputEl = document.getElementById('chatInput');
     this.sendBtn = document.getElementById('chatSendBtn');
@@ -200,7 +208,21 @@ class ChatManager {
     this.oldestVisibleTimestamp = null;
     this.hasMoreMessages = true;
 
+    // If a custom onClose callback is set, call it instead of default panel hide
+    if (typeof this._onCloseCallback === 'function') {
+      this._onCloseCallback();
+      return;
+    }
+
     this._showPanel(false);
+  }
+
+  /**
+   * Set a custom callback for when chat is closed.
+   * @param {Function|null} fn
+   */
+  setOnClose(fn) {
+    this._onCloseCallback = fn;
   }
 
   _showPanel(open) {
@@ -627,10 +649,14 @@ class ChatManager {
 }
 
 // ─────────────────────────────────────────
-// Singleton Export
+// Exports
 // ─────────────────────────────────────────
-const chat = new ChatManager();
-export default chat;
+// Named export: the class itself (for pages that need to instantiate separately)
+export { ChatManager };
+
+// Default export: singleton (for index.html inline chat widget)
+const chatSingleton = new ChatManager();
+export default chatSingleton;
 
 // ── Global access for non-module scripts ──
-window.PostAIAgeChat = chat;
+window.PostAIAgeChat = chatSingleton;
