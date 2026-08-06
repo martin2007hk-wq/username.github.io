@@ -359,6 +359,8 @@ class ChatManager {
     if (this.sendBtn) this.sendBtn.disabled = true;
 
     try {
+      // Ensure chat document exists before sending (first message in new conversation)
+      await this.ensureChatExists();
       await this._doSend(trimmed);
 
       // Clear input
