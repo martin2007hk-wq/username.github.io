@@ -570,6 +570,9 @@ class ChatManager {
   _onFabClick() {
     if (!this._ensureAuth()) return;
 
+    // Show the panel
+    this._showPanel(true);
+
     // If no active chat, show a prompt or a simple contact selector
     // For MVP, demo: open chat with a test user (or show list)
     if (!this.currentChatId) {
