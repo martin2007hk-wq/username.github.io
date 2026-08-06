@@ -113,8 +113,12 @@
       <p class="thanks-sub">我哋會喺服務上線時第一時間通知你。Stay tuned! 🚀</p>
       <a href="/" class="thanks-back">返回主頁</a>
     </div>
+
+    <!-- Conversion Attribution Summary (hidden, for analytics) -->
+    <p id="conversionAttribution" style="display:none;margin-top:1.5rem;font-size:0.8rem;color:var(--text-muted);text-align:center;"></p>
   </div>
 
+  <script src="js/cookies.js"></script>
   <script>
     (function() {
       const params = new URLSearchParams(window.location.search);
@@ -159,6 +163,29 @@
         msg.textContent = '你已成功鎖定 6 折最低價同所有早鳥權益！';
       } else {
         msg.textContent = '服務上線時你會第一時間收到 8 折優惠碼！';
+      }
+
+      // ── Cookie: Mark session as registered ─────────────────
+      if (window.PostAIAgeCookies) {
+        window.PostAIAgeCookies.markRegistered(plan);
+
+        // Optional: Show conversion attribution in console for debugging
+        var v = window.PostAIAgeCookies.getVisitData();
+        if (v) {
+          var attrEl = document.getElementById('conversionAttribution');
+          if (attrEl) {
+            attrEl.style.display = 'block';
+            attrEl.textContent = '📊 Visit #' + v.visitCount + ' | Landing: ' + v.landingPage + ' | ' + (v.referrer !== 'direct' ? 'Referred by: ' + v.referrer : 'Direct traffic');
+          }
+
+          // Also record conversion event if tracker is available
+          if (typeof window.recordRegistration === 'function') {
+            // Already recorded by earlybird.js, but ensure visit context is there
+            console.log('PostAIAge: conversion attributed — visit #' + v.visitCount +
+              ', referrer=' + v.referrer +
+              ', daysSinceFirst=' + (window.PostAIAgeCookies.daysSinceFirstVisit()));
+          }
+        }
       }
     })();
   </script>

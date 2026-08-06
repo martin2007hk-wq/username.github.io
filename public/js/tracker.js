@@ -1,7 +1,7 @@
 /**
  * PostAIAge — Click & Registration Tracker
  * Uses localStorage for offline-capable event tracking.
- * No external dependencies.
+ * Depends on: cookies.js (loaded first) for visitor context enrichment.
  */
 
 (function () {
@@ -18,6 +18,31 @@
 
   function isoNow() {
     return new Date().toISOString();
+  }
+
+  /**
+   * Enrich an event with visitor context from cookies.
+   * Call this on every recorded event so we can attribute conversions.
+   */
+  function visitorContext() {
+    var ctx = {};
+    try {
+      if (window.PostAIAgeCookies) {
+        var v = window.PostAIAgeCookies.getVisitData() || {};
+        ctx = {
+          visitCount: v.visitCount || 1,
+          firstVisit: v.firstVisit || null,
+          referrer: v.referrer || null,
+          landingPage: v.landingPage || null,
+          isReturning: v.visitCount > 1,
+          daysSinceFirst: window.PostAIAgeCookies.daysSinceFirstVisit()
+        };
+      }
+    } catch (e) {
+      // If cookies.js not loaded yet, skip enrichment silently
+    }
+    ctx.recordedAt = isoNow();
+    return ctx;
   }
 
   function readStore(key) {
@@ -49,7 +74,8 @@
     const event = {
       id: generateId('click'),
       timestamp: isoNow(),
-      source: source
+      source: source,
+      vc: visitorContext()
     };
     store.totalClicks += 1;
     store.events.push(event);
@@ -75,7 +101,8 @@
       timestamp: isoNow(),
       plan: plan,
       method: method,
-      email: email || null
+      email: email || null,
+      vc: visitorContext()
     };
 
     store.totalRegistrations += 1;

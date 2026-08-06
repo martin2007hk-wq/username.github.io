@@ -1,12 +1,12 @@
 /**
  * PostAIAge Chat — Core Module
- * 
+ *
  * Architecture:
  * - Firebase Firestore onSnapshot for real-time messaging
  * - Cost-optimized: limit(50) + cursor pagination + denormalized previews
  * - ChatManager class handles lifecycle (open/close/unsubscribe)
  * - Client-side validation + rate limiting (defense in depth)
- * 
+ *
  * Depends on: auth.js (exports { auth, db, app })
  */
 
@@ -207,9 +207,11 @@ class ChatManager {
     if (!this.panel || !this.fab) return;
     if (open) {
       this.panel.classList.remove('hidden');
+      this.panel.setAttribute('aria-hidden', 'false');
       this.fab.style.display = 'none';
     } else {
       this.panel.classList.add('hidden');
+      this.panel.setAttribute('aria-hidden', 'true');
       this.fab.style.display = 'flex';
     }
   }

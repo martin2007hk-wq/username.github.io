@@ -862,3 +862,60 @@ a:hover { color: #4A7D89; }
   text-align: center;
   margin-top: 1.5rem;
 }
+
+/* ===== Cookie Consent Banner ===== */
+.cookie-banner {
+  display: none; /* hidden by default, shown by JS if no consent */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--text);
+  color: rgba(255,255,255,0.9);
+  padding: 1rem 1.5rem;
+  z-index: 10000;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  box-shadow: 0 -4px 24px rgba(0,0,0,0.15);
+  animation: slideUp 0.35s ease;
+}
+
+.cookie-banner p {
+  margin: 0 0 0.75rem;
+}
+
+.cookie-banner small {
+  opacity: 0.7;
+  font-size: 0.75rem;
+}
+
+.cookie-banner-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.cookie-banner .btn-sm {
+  padding: 0.4rem 1.2rem;
+  font-size: 0.8rem;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  border: none;
+  font-weight: 600;
+}
+
+.cookie-banner .btn-primary.btn-sm {
+  background: var(--accent);
+  color: #fff;
+}
+
+.cookie-banner .btn-outline.btn-sm {
+  background: transparent;
+  color: rgba(255,255,255,0.8);
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
