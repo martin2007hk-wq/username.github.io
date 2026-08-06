@@ -56,7 +56,7 @@ service cloud.firestore {
 
     // Rate limit: 2-second cooldown between messages
     function isNotTooFast(uid, chatId) {
-      let rateDoc = get(/databases/$(database)/documents/rateLimits/$(uid)_$(chatId));
+      let rateDoc = get(/databases/$(database)/documents/users/$(uid)/rateLimits/$(chatId));
       return !rateDoc.data.exists()
         || request.time >= rateDoc.data.lastMessageAt + duration.time(2, 's');
     }
@@ -111,28 +111,20 @@ service cloud.firestore {
     }
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Rate Limits Collection
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    match /rateLimits/{docId} {
-      allow create: if isAuth()
-        && docId.split('_')[0] == request.auth.uid;
-
-      allow update: if isAuth()
-        && docId.split('_')[0] == request.auth.uid;
-
-      allow read: if isAuth()
-        && docId.split('_')[0] == request.auth.uid;
-
-      allow delete: if false;
-    }
-
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Users Collection (public profiles)
+    // Users Collection (public profiles + rate limits)
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     match /users/{uid} {
       allow read: if isAuth();
       allow create, update: if isAuth() && request.auth.uid == uid;
       allow delete: if false;
+
+      // Per-user rate limit subcollection
+      // path: users/{uid}/rateLimits/{chatId}
+      match /rateLimits/{chatId} {
+        allow create, update: if isAuth() && request.auth.uid == uid;
+        allow read: if isAuth() && request.auth.uid == uid;
+        allow delete: if false;
+      }
     }
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

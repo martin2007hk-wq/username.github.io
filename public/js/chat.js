@@ -376,8 +376,8 @@ class ChatManager {
       lastMessageBy: this.user.uid
     });
 
-    // 3. Update rate limit tracker
-    const rateRef = doc(db, 'rateLimits', `${this.user.uid}_${chatId}`);
+    // 3. Update rate limit tracker (nested under users/{uid}/rateLimits/{chatId})
+    const rateRef = doc(db, 'users', this.user.uid, 'rateLimits', chatId);
     batch.set(rateRef, {
       lastMessageAt: serverTimestamp()
     }, { merge: true });
