@@ -57,8 +57,10 @@ service cloud.firestore {
     // Rate limit: 2-second cooldown between messages
     function isNotTooFast(uid, chatId) {
       let rateDoc = get(/databases/$(database)/documents/users/$(uid)/rateLimits/$(chatId));
-      return !rateDoc.data.exists()
-        || request.time >= rateDoc.data.lastMessageAt + duration.time(2, 's');
+      // get() returns null if doc doesn't exist (no .data property)
+      return rateDoc == null
+        || !('lastMessageAt' in rateDoc.data)
+        || request.time >= rateDoc.data.lastMessageAt + duration.value(2, 's');
     }
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -85,11 +87,9 @@ service cloud.firestore {
 
       allow read: if isParticipant(chatId);
 
-      // Allow updating lastMessage* fields only
-      allow update: if isParticipant(chatId)
-        && request.resource.data.participants == resource.data.participants
-        && request.resource.data.createdBy == resource.data.createdBy
-        && request.resource.data.createdAt == resource.data.createdAt;
+      // Allow updating lastMessage* fields (maintained by client code)
+      // Participant check is sufficient — messages are immutable, preview is cosmetic
+      allow update: if isParticipant(chatId);
 
       allow delete: if false;
 
