@@ -453,30 +453,34 @@ a:hover { color: #4A7D89; }
 
 /* ===== Login Modal (Redesigned) ===== */
 
-/* -- Animations -- */
-@keyframes loginFadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-@keyframes loginSlideUp {
-  from { opacity: 0; transform: translateY(20px) scale(0.97); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
+/* -- Animations (removed keyframe animations; using GPU-composited transitions instead) -- */
 
 /* -- Overlay -- */
 .login-modal-overlay {
-  display: none;
   position: fixed; inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.6);
   z-index: 9999;
+  display: flex;
   align-items: center; justify-content: center;
   padding: 1rem;
-  animation: loginFadeIn 0.25s ease;
+
+  /* Hidden by default — use visibility+opacity instead of display:none
+     so the browser can establish the compositor layer before animating */
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  /* On close: fade opacity first, then hide visibility after 0.25s */
+  transition: visibility 0s 0.25s, opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 .login-modal-overlay.active {
-  display: flex;
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  /* On open: show visibility immediately, fade opacity in */
+  transition: visibility 0s 0s, opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* -- Modal Card -- */
@@ -488,7 +492,19 @@ a:hover { color: #4A7D89; }
   padding: 40px 32px 36px;
   box-shadow: 0 24px 80px rgba(44, 36, 22, 0.18),
               0 0 0 1px rgba(0, 0, 0, 0.04);
-  animation: loginSlideUp 0.35s ease;
+
+  /* Start state (hidden) — compositor-only properties */
+  opacity: 0;
+  transform: translateY(20px) scale(0.97);
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+/* Card animates in when overlay becomes active */
+.login-modal-overlay.active .login-modal {
+  opacity: 1;
+  transform: translateY(0) scale(1);
 }
 
 /* -- Close Button (X icon top-right) -- */

@@ -67,11 +67,19 @@ function render() {
 function openLoginModal() {
   const modal = document.getElementById('loginModal');
   if (!modal) return;
-  modal.classList.add('active');
+  // Using the visibility+opacity approach: overlay is always display:flex,
+  // so we just need to add .active to trigger the CSS transition.
+  // requestAnimationFrame ensures the browser has time to paint the
+  // initial (hidden) state before transitioning to active.
   modal.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
-  // Focus email field
-  setTimeout(() => document.getElementById('loginEmail')?.focus(), 100);
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      modal.classList.add('active');
+      // Focus email field after card has started animating in
+      setTimeout(() => document.getElementById('loginEmail')?.focus(), 150);
+    });
+  });
 }
 
 window.closeLoginModal = function () {
@@ -80,13 +88,15 @@ window.closeLoginModal = function () {
   modal.classList.remove('active');
   modal.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
-  // Clear form
-  const emailEl = document.getElementById('loginEmail');
-  const passwordEl = document.getElementById('loginPassword');
-  const errorEl = document.getElementById('loginError');
-  if (emailEl) emailEl.value = '';
-  if (passwordEl) passwordEl.value = '';
-  if (errorEl) errorEl.classList.add('hidden');
+  // Clear form after transition ends (0.25s opacity + buffer)
+  setTimeout(() => {
+    const emailEl = document.getElementById('loginEmail');
+    const passwordEl = document.getElementById('loginPassword');
+    const errorEl = document.getElementById('loginError');
+    if (emailEl) emailEl.value = '';
+    if (passwordEl) passwordEl.value = '';
+    if (errorEl) errorEl.classList.add('hidden');
+  }, 300);
 };
 
 window.submitLoginEmail = async function () {
