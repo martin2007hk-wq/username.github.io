@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>註冊 — PostAIAge</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/register.css?v=1">
+</head>
+<body class="register-body">
+
+  <div class="register-container">
+    <!-- Back link -->
+    <a href="/" class="register-back">← 返回首頁</a>
+
+    <!-- Step 1: Plan Selection -->
+    <div class="register-step" id="stepPlan">
+      <h1>選擇你的方案</h1>
+      <p class="register-sub">揀一個啱你嘅方案，開始登記。</p>
+
+      <div class="register-plans">
+        <div class="reg-plan-card" data-plan="A" onclick="selectRegPlan('A')">
+          <span class="reg-plan-badge">📩 免費</span>
+          <h3>方案 A：訂閱通知</h3>
+          <p class="reg-plan-price">$0</p>
+          <p class="reg-plan-desc">服務上線時第一時間通知你，享 8 折優惠。</p>
+          <ul>
+            <li>✅ 上線 Email 通知</li>
+            <li>✅ 享上線 <strong>8 折</strong> 優惠碼</li>
+            <li>✅ 早鳥資訊優先接收</li>
+            <li>✅ 社群討論權限</li>
+          </ul>
+        </div>
+
+        <div class="reg-plan-card" data-plan="B" onclick="selectRegPlan('B')">
+          <span class="reg-plan-badge reg-plan-badge--hot">🔥 限量早鳥</span>
+          <h3>方案 B：搶先預約</h3>
+          <p class="reg-plan-price">鎖定最低價<span>（暫不扣款）</span></p>
+          <p class="reg-plan-desc">成為概念共建者，鎖定 6 折 + 投票權。</p>
+          <ul>
+            <li>✅ 包含方案 A 所有權益</li>
+            <li>✅ 上線鎖定 <strong>6 折</strong> 最低價</li>
+            <li>✅ 產品方向 <strong>投票權</strong></li>
+            <li>✅ 專屬社群頻道</li>
+            <li>✅ 限量 Early Builder 徽章</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="disclaimer-banner">
+        ⚠️ 本服務目前處於概念與原型開發階段，預計 2027 年上線。本次登記不會進行任何扣款。
+      </div>
+    </div>
+
+    <!-- Step 2: Profile Details -->
+    <div class="register-step hidden" id="stepProfile">
+      <h1>完善你的資料</h1>
+      <p class="register-sub">方案 <strong id="selectedPlanLabel">-</strong></p>
+
+      <!-- Status Picker -->
+      <div class="register-section">
+        <label class="register-label">你目前嘅身份？</label>
+        <div class="status-options">
+          <label class="status-option">
+            <input type="radio" name="status" value="unemployed" onchange="selectStatus('unemployed')">
+            <div class="status-card">
+              <span class="status-icon">🔴</span>
+              <strong>失業中</strong>
+              <small>正在尋找新嘅方向</small>
+            </div>
+          </label>
+          <label class="status-option">
+            <input type="radio" name="status" value="fear_unemployment" onchange="selectStatus('fear_unemployment')">
+            <div class="status-card">
+              <span class="status-icon">🟡</span>
+              <strong>害怕失業</strong>
+              <small>擔心 AI 取代目前工作</small>
+            </div>
+          </label>
+          <label class="status-option">
+            <input type="radio" name="status" value="student" onchange="selectStatus('student')">
+            <div class="status-card">
+              <span class="status-icon">🟢</span>
+              <strong>學生</strong>
+              <small>準備進入職場</small>
+            </div>
+          </label>
+          <label class="status-option">
+            <input type="radio" name="status" value="other" onchange="selectStatus('other')">
+            <div class="status-card">
+              <span class="status-icon">🟣</span>
+              <strong>其他</strong>
+              <small>關心後 AI 時代</small>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Email Visibility -->
+      <div class="register-section">
+        <label class="register-label">是否願意公開電郵給其他社群成員？（方便交流）</label>
+        <div class="toggle-row">
+          <label class="toggle-label">
+            <input type="radio" name="emailVisible" value="yes" onchange="selectEmailVisible(true)">
+            <span class="toggle-card">🟢 願意顯示</span>
+          </label>
+          <label class="toggle-label">
+            <input type="radio" name="emailVisible" value="no" checked onchange="selectEmailVisible(false)">
+            <span class="toggle-card">🔒 不顯示</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Registration Methods -->
+      <div class="register-section" id="regMethods">
+        <label class="register-label">選擇註冊方式</label>
+
+        <!-- Email -->
+        <div class="reg-method-box">
+          <h4>📧 以 Email 登記</h4>
+          <input type="email" id="regEmail" placeholder="輸入你的電郵地址" required>
+          <input type="password" id="regPassword" placeholder="設定密碼（最少6位）" required minlength="6">
+          <p class="privacy-note">
+            🔐 填寫即代表同意我們在服務上線時透過 Email 通知您，資料不會作其他用途。
+          </p>
+          <button class="btn-register btn-email" id="btnEmailReg" onclick="submitEmailReg()">
+            確認登記 →
+          </button>
+        </div>
+
+        <div class="divider"><span>或</span></div>
+
+        <!-- Google -->
+        <button class="btn-register btn-google" id="btnGoogleReg" onclick="submitGoogleReg()">
+          <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          以 Google 帳戶繼續
+        </button>
+      </div>
+
+      <!-- Loading/Error state -->
+      <div class="reg-status hidden" id="regStatus"></div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <script type="module" src="js/auth.js?v=7"></script>
+  <script type="module" src="js/register.js?v=1"></script>
+</body>
+</html>

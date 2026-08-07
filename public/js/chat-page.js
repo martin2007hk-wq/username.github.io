@@ -7,8 +7,8 @@
  * Depends on: auth.js (exports auth, db), chat.js (exports ChatManager)
  */
 
-import { auth, db } from './auth.js?v=6';
-import { ChatManager } from './chat.js?v=6';
+import { auth, db } from './auth.js?v=7';
+import { ChatManager } from './chat.js?v=7';
 import {
   collection,
   query,

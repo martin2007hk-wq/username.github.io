@@ -10,7 +10,7 @@
  * Depends on: auth.js (exports { auth, db, app })
  */
 
-import { auth, db } from './auth.js?v=6';
+import { auth, db } from './auth.js?v=7';
 import {
   collection,
   query,

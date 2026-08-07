@@ -1,6 +1,6 @@
 /**
- * PostAIAge — Early Bird Modal Logic
- * Depends on: tracker.js (loaded first), auth.js (for loginWithGoogleForPlan)
+ * PostAIAge — Early Bird + Inline Registration Logic
+ * Depends on: tracker.js (loaded first), auth.js (v7: registerWithEmail, registerWithGoogle)
  * Vanilla JS, no dependencies.
  */
 
@@ -51,10 +51,13 @@
     if (registrationMethods) {
       registrationMethods.style.display = 'none';
     }
-    // Clear modal's own email input (now has unique ID earlyBirdEmailModal)
     var modalEmailInput = document.getElementById('earlyBirdEmailModal');
     if (modalEmailInput) {
       modalEmailInput.value = '';
+    }
+    var modalPasswordInput = document.getElementById('earlyBirdPasswordModal');
+    if (modalPasswordInput) {
+      modalPasswordInput.value = '';
     }
 
     // Show modal
@@ -74,7 +77,6 @@
     document.body.style.overflow = '';
     selectedPlan = null;
 
-    // Clear password field as well
     var modalPasswordInput = document.getElementById('earlyBirdPasswordModal');
     if (modalPasswordInput) {
       modalPasswordInput.value = '';
@@ -98,7 +100,6 @@
       }
     });
 
-    // Reveal registration methods
     if (registrationMethods) {
       registrationMethods.style.display = 'block';
     }
@@ -106,17 +107,12 @@
 
   // ── Email Registration (Modal) ─────────────────────────────
 
-  /**
-   * Validate email from modal, record registration, redirect to /thanks.
-   * Uses the modal's unique input ID: earlyBirdEmailModal
-   */
   async function submitEmailRegistration() {
     if (!selectedPlan) {
       showToast('請先選擇方案 A 或方案 B。', 'error');
       return;
     }
 
-    // Use the modal-specific input (not the inline one)
     var modalEmailInput = document.getElementById('earlyBirdEmailModal');
     var modalPasswordInput = document.getElementById('earlyBirdPasswordModal');
     if (!modalEmailInput || !modalPasswordInput) {
@@ -127,93 +123,77 @@
     const email = modalEmailInput.value.trim();
     const password = modalPasswordInput.value;
 
-    // Basic email validation
     var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email)) {
       showToast('請輸入有效的電郵地址。', 'error');
       return;
     }
-
-    // Password validation
     if (!password || password.length < 6) {
       showToast('密碼最少需要6位字符。', 'error');
       return;
     }
 
     const name = email.split('@')[0];
-    const redirect = function (uid) {
-      window.location.href = '/thanks?plan=' + encodeURIComponent(selectedPlan)
-        + '&method=email&name=' + encodeURIComponent(name)
-        + '&email=' + encodeURIComponent(email)
-        + '&uid=' + encodeURIComponent(uid || '');
-    };
 
-    // Attempt Firebase Auth sign-up (or sign-in if already exists)
-    try {
-      if (typeof window.signUpWithEmail !== 'function') {
-        // Fallback: no Firebase Auth available, just write to Firestore
+    // Use new registerWithEmail (v7 auth.js)
+    if (typeof window.registerWithEmail === 'function') {
+      try {
+        const { user } = await window.registerWithEmail(email, password, selectedPlan, {
+          status: null,
+          emailVisible: false,
+          name: name
+        });
         if (typeof window.recordRegistration === 'function') {
           window.recordRegistration(selectedPlan, 'email', email);
         }
-        if (typeof window.writeToFirestore === 'function') {
-          await window.writeToFirestore({
-            plan: selectedPlan, method: 'email', name: name, email: email, source: 'modal'
-          });
+        window.location.href = '/thanks?plan=' + encodeURIComponent(selectedPlan)
+          + '&method=email&name=' + encodeURIComponent(name)
+          + '&email=' + encodeURIComponent(email)
+          + '&uid=' + encodeURIComponent(user.uid || '');
+        return;
+      } catch (error) {
+        console.error('Email registration failed:', error);
+        if (error.code === 'auth/weak-password') {
+          showToast('密碼太弱，請設定一個更強嘅密碼。', 'error');
+        } else if (error.code === 'auth/invalid-email') {
+          showToast('電郵地址格式有誤，請檢查。', 'error');
+        } else if (error.code === 'auth/too-many-requests') {
+          showToast('嘗試次數過多，請稍後再試。', 'error');
+        } else {
+          showToast('登記失敗，請稍後再試或改用 Google 登入。', 'error');
         }
-        redirect('');
         return;
       }
-
-      const { user, isNew } = await window.signUpWithEmail(email, password);
-
-      // Record registration (localStorage)
-      if (typeof window.recordRegistration === 'function') {
-        window.recordRegistration(selectedPlan, 'email', email);
-      }
-
-      // Write to Firestore with the Firebase Auth UID
-      if (typeof window.writeToFirestore === 'function') {
-        await window.writeToFirestore({
-          plan: selectedPlan,
-          method: 'email',
-          name: name,
-          email: email,
-          uid: user.uid,
-          source: 'modal'
-        });
-      }
-
-      redirect(user.uid);
-
-    } catch (error) {
-      console.error('Email registration failed:', error);
-      // Map Firebase errors to user-friendly messages
-      if (error.code === 'auth/weak-password') {
-        showToast('密碼太弱，請設定一個更強嘅密碼。', 'error');
-      } else if (error.code === 'auth/invalid-email') {
-        showToast('電郵地址格式有誤，請檢查。', 'error');
-      } else if (error.code === 'auth/too-many-requests') {
-        showToast('嘗試次數過多，請稍後再試。', 'error');
-      } else {
-        showToast('登記失敗，請稍後再試或改用 Google 登入。', 'error');
-      }
     }
+
+    // Fallback (no Firebase Auth available)
+    if (typeof window.recordRegistration === 'function') {
+      window.recordRegistration(selectedPlan, 'email', email);
+    }
+    if (typeof window.writeToFirestore === 'function') {
+      await window.writeToFirestore({
+        plan: selectedPlan, method: 'email', name: name, email: email, source: 'modal'
+      });
+    }
+    window.location.href = '/thanks?plan=' + encodeURIComponent(selectedPlan)
+      + '&method=email&name=' + encodeURIComponent(name)
+      + '&email=' + encodeURIComponent(email);
   }
 
   // ── Google Registration ────────────────────────────────────
 
-  /**
-   * Delegate to auth.js loginWithGoogleForPlan, which handles
-   * Firebase popup → recordRegistration → redirect /thanks.
-   */
   function submitGoogleRegistration() {
     if (!selectedPlan) {
       showToast('請先選擇方案 A 或方案 B。', 'error');
       return;
     }
 
-    if (typeof window.loginWithGoogleForPlan === 'function') {
-      window.loginWithGoogleForPlan(selectedPlan, 'modal');
+    if (typeof window.registerWithGoogle === 'function') {
+      window.registerWithGoogle(selectedPlan, { source: 'modal' }).then(() => {
+        window.location.href = '/thanks?plan=' + encodeURIComponent(selectedPlan) + '&method=google';
+      }).catch(() => {
+        showToast('Google 登入失敗，請再試一次。', 'error');
+      });
     } else {
       showToast('Google 登入功能暫時無法使用，請嘗試 Email 登記。', 'error');
     }
@@ -223,14 +203,9 @@
 
   let selectedPlanInline = null;
 
-  /**
-   * Select a plan in the inline bottom section, reveal registration area.
-   * @param {'A'|'B'} plan
-   */
   function selectPlanInline(plan) {
     selectedPlanInline = plan;
 
-    // Toggle card selection
     document.querySelectorAll('.plan-card-inline').forEach(function (card) {
       card.classList.remove('plan-card-inline--selected');
     });
@@ -239,30 +214,22 @@
       planCard.classList.add('plan-card-inline--selected');
     }
 
-    // Show registration area
     var regArea = document.getElementById('registrationArea');
     if (regArea) {
       regArea.style.display = 'block';
-      // Scroll registration area into view smoothly
       regArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
 
-    // Update title based on plan
     var title = document.getElementById('registrationTitle');
     if (title) {
       title.textContent = plan === 'A' ? '登記接收上線通知' : '登記搶先預約早鳥資格';
     }
 
-    // Track selection
     if (typeof window.trackCTAClick === 'function') {
       window.trackCTAClick(plan === 'A' ? 'plan-a-select' : 'plan-b-select');
     }
   }
 
-  /**
-   * Submit email registration from inline bottom section.
-   * Redirects to /thanks on success.
-   */
   async function submitEmailRegistrationInline() {
     var emailInputEl = document.getElementById('earlyBirdEmail');
     var passwordInputEl = document.getElementById('earlyBirdPassword');
@@ -283,74 +250,64 @@
     }
 
     const name = email.split('@')[0];
-    const redirect = function (uid) {
-      window.location.href = '/thanks?plan=' + encodeURIComponent(selectedPlanInline)
-        + '&method=email&name=' + encodeURIComponent(name)
-        + '&email=' + encodeURIComponent(email)
-        + '&uid=' + encodeURIComponent(uid || '');
-    };
 
-    // Attempt Firebase Auth sign-up (or sign-in if already exists)
-    try {
-      if (typeof window.signUpWithEmail !== 'function') {
-        // Fallback: no Firebase Auth available
+    // Use new registerWithEmail (v7 auth.js)
+    if (typeof window.registerWithEmail === 'function') {
+      try {
+        const { user } = await window.registerWithEmail(email, password, selectedPlanInline, {
+          status: null,
+          emailVisible: false,
+          name: name
+        });
         if (typeof window.recordRegistration === 'function') {
           window.recordRegistration(selectedPlanInline, 'email', email);
         }
-        if (typeof window.writeToFirestore === 'function') {
-          await window.writeToFirestore({
-            plan: selectedPlanInline, method: 'email', name: name, email: email, source: 'inline'
-          });
+        window.location.href = '/thanks?plan=' + encodeURIComponent(selectedPlanInline)
+          + '&method=email&name=' + encodeURIComponent(name)
+          + '&email=' + encodeURIComponent(email)
+          + '&uid=' + encodeURIComponent(user.uid || '');
+        return;
+      } catch (error) {
+        console.error('Email registration (inline) failed:', error);
+        if (error.code === 'auth/weak-password') {
+          showToast('密碼太弱，請設定一個更強嘅密碼。', 'error');
+        } else if (error.code === 'auth/invalid-email') {
+          showToast('電郵地址格式有誤，請檢查。', 'error');
+        } else if (error.code === 'auth/too-many-requests') {
+          showToast('嘗試次數過多，請稍後再試。', 'error');
+        } else {
+          showToast('登記失敗，請稍後再試或改用 Google 登入。', 'error');
         }
-        redirect('');
         return;
       }
-
-      const { user, isNew } = await window.signUpWithEmail(email, password);
-
-      if (typeof window.recordRegistration === 'function') {
-        window.recordRegistration(selectedPlanInline, 'email', email);
-      }
-
-      if (typeof window.writeToFirestore === 'function') {
-        await window.writeToFirestore({
-          plan: selectedPlanInline,
-          method: 'email',
-          name: name,
-          email: email,
-          uid: user.uid,
-          source: 'inline'
-        });
-      }
-
-      redirect(user.uid);
-
-    } catch (error) {
-      console.error('Email registration (inline) failed:', error);
-      if (error.code === 'auth/weak-password') {
-        showToast('密碼太弱，請設定一個更強嘅密碼。', 'error');
-      } else if (error.code === 'auth/invalid-email') {
-        showToast('電郵地址格式有誤，請檢查。', 'error');
-      } else if (error.code === 'auth/too-many-requests') {
-        showToast('嘗試次數過多，請稍後再試。', 'error');
-      } else {
-        showToast('登記失敗，請稍後再試或改用 Google 登入。', 'error');
-      }
     }
+
+    // Fallback
+    if (typeof window.recordRegistration === 'function') {
+      window.recordRegistration(selectedPlanInline, 'email', email);
+    }
+    if (typeof window.writeToFirestore === 'function') {
+      await window.writeToFirestore({
+        plan: selectedPlanInline, method: 'email', name: name, email: email, source: 'inline'
+      });
+    }
+    window.location.href = '/thanks?plan=' + encodeURIComponent(selectedPlanInline)
+      + '&method=email&name=' + encodeURIComponent(name)
+      + '&email=' + encodeURIComponent(email);
   }
 
-  /**
-   * Submit Google registration from inline bottom section.
-   * Delegates to auth.js loginWithGoogleForPlan, which redirects to /thanks.
-   */
   function submitGoogleRegistrationInline() {
     if (!selectedPlanInline) {
       showToast('請先選擇一個方案', 'error');
       return;
     }
 
-    if (typeof window.loginWithGoogleForPlan === 'function') {
-      window.loginWithGoogleForPlan(selectedPlanInline, 'inline');
+    if (typeof window.registerWithGoogle === 'function') {
+      window.registerWithGoogle(selectedPlanInline, { source: 'inline' }).then(() => {
+        window.location.href = '/thanks?plan=' + encodeURIComponent(selectedPlanInline) + '&method=google';
+      }).catch(() => {
+        showToast('Google 登入失敗，請再試一次。', 'error');
+      });
     } else {
       showToast('Google 登入暫時無法使用，請用 Email 登記', 'error');
     }
@@ -358,11 +315,6 @@
 
   // ── Toast ──────────────────────────────────────────────────
 
-  /**
-   * Display a toast notification that auto-dismisses after 3 seconds.
-   * @param {string} message
-   * @param {'success'|'error'} type
-   */
   function showToast(message, type) {
     if (!toastContainer) return;
 
@@ -372,7 +324,6 @@
 
     toastContainer.appendChild(toast);
 
-    // Auto-dismiss after 3s
     setTimeout(function () {
       if (toast.parentNode) {
         toast.remove();
@@ -393,7 +344,6 @@
   window.submitGoogleRegistrationInline = submitGoogleRegistrationInline;
   window.showToast = showToast;
 
-  // Also expose selectedPlan for debugging
   window._getSelectedPlan = function () { return selectedPlan; };
 
   // ── Close modal on overlay click & Escape key ──────────────
