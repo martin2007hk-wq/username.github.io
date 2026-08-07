@@ -200,6 +200,7 @@
         <h4 id="registrationTitle">以 Email 登記</h4>
         <div class="email-registration">
           <input type="email" id="earlyBirdEmail" placeholder="輸入你的電郵地址" required>
+          <input type="password" id="earlyBirdPassword" placeholder="設定密碼（最少6位）" required minlength="6" style="margin-top: 10px;">
           <p class="privacy-notice">
             🔐 填寫即代表同意我們在服務上線時透過 Email 通知您，我們不會將您的資料作其他用途。
           </p>
@@ -271,13 +272,13 @@
   </div>
 
   <!-- ===== Firebase Auth Module ===== -->
-  <script type="module" src="js/auth.js?v=5"></script>
+  <script type="module" src="js/auth.js?v=6"></script>
   <script type="module" src="js/chat.js?v=5"></script>
 
   <!-- ===== Scripts ===== -->
   <script src="js/cookies.js"></script>
   <script src="js/tracker.js"></script>
-  <script src="js/earlybird.js"></script>
+  <script src="js/earlybird.js?v=1"></script>
   <script src="js/main.js"></script>
 
   <!-- Cookie Consent Banner -->
@@ -363,6 +364,7 @@
           <h4>選擇註冊方式：</h4>
           <div class="email-registration">
             <input type="email" id="earlyBirdEmailModal" placeholder="輸入你的電郵地址" required>
+            <input type="password" id="earlyBirdPasswordModal" placeholder="設定密碼（最少6位）" required minlength="6" style="margin-top: 10px;">
             <p class="privacy-notice">
               🔐 填寫即代表同意我們在服務上線時透過 Email 通知您，我們不會將您的資料作其他用途。
             </p>

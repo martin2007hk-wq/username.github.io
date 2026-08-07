@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -113,6 +113,39 @@ window.loginWithGoogleForPlan = async (plan, source) => {
     if (typeof window.showToast === 'function') {
       window.showToast('Google 登入失敗，請再試一次或改用 Email 登記。', 'error');
     }
+  }
+};
+
+// ── Email/Password 注冊 + 登入 ────────────────────────────────
+
+/**
+ * Sign up with email + password (creates Firebase Auth account).
+ * If the email is already registered, falls back to sign-in.
+ * Returns the Firebase user object on success.
+ * @param {string} email
+ * @param {string} password
+ * @returns {Promise<{user: object, isNew: boolean}>}
+ */
+window.signUpWithEmail = async function (email, password) {
+  try {
+    // Try creating a new account first
+    const result = await createUserWithEmailAndPassword(auth, email, password);
+    console.log('PostAIAge: Email 注冊成功', result.user.email);
+    return { user: result.user, isNew: true };
+  } catch (error) {
+    if (error.code === 'auth/email-already-in-use') {
+      // User already exists — sign them in instead
+      try {
+        const signInResult = await signInWithEmailAndPassword(auth, email, password);
+        console.log('PostAIAge: Email 登入（已有帳戶）', signInResult.user.email);
+        return { user: signInResult.user, isNew: false };
+      } catch (signInError) {
+        console.error('PostAIAge: Email 登入失敗', signInError);
+        throw signInError;
+      }
+    }
+    console.error('PostAIAge: Email 注冊失敗', error);
+    throw error;
   }
 };
 
