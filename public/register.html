@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/register.css?v=1">
+  <link rel="stylesheet" href="css/register.css?v=2">
 </head>
 <body class="register-body">
 
@@ -60,6 +60,12 @@
       <h1>完善你的資料</h1>
       <p class="register-sub">方案 <strong id="selectedPlanLabel">-</strong></p>
 
+      <!-- Name -->
+      <div class="register-section">
+        <label class="register-label">你嘅稱呼</label>
+        <input type="text" id="regName" placeholder="輸入你嘅名/花名" class="reg-text-input" maxlength="50">
+      </div>
+
       <!-- Status Picker -->
       <div class="register-section">
         <label class="register-label">你目前嘅身份？</label>
@@ -101,7 +107,7 @@
 
       <!-- Email Visibility -->
       <div class="register-section">
-        <label class="register-label">是否願意公開電郵給其他社群成員？（方便交流）</label>
+        <label class="register-label">是否願意公開電郵畀其他社群成員？（方便交流）</label>
         <div class="toggle-row">
           <label class="toggle-label">
             <input type="radio" name="emailVisible" value="yes" onchange="selectEmailVisible(true)">
@@ -149,6 +155,6 @@
   <div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
   <script type="module" src="js/auth.js?v=7"></script>
-  <script type="module" src="js/register.js?v=1"></script>
+  <script type="module" src="js/register.js?v=2"></script>
 </body>
 </html>

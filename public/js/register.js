@@ -7,12 +7,22 @@ let selectedPlan = null;
 let selectedStatus = null;
 let emailVisible = false;
 
+// ── Read plan from URL parameter ────────────────────────
+
+(function initPlanFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const planParam = params.get('plan');
+  if (planParam === 'A' || planParam === 'B') {
+    // Auto-select the plan and skip step 1
+    selectRegPlan(planParam);
+  }
+})();
+
 // ── Step 1: Plan Selection ─────────────────────────────
 
 window.selectRegPlan = function (plan) {
   selectedPlan = plan;
 
-  // Update UI
   document.querySelectorAll('.reg-plan-card').forEach((el) => {
     el.classList.toggle('selected', el.dataset.plan === plan);
   });
@@ -22,6 +32,11 @@ window.selectRegPlan = function (plan) {
   // Show step 2
   document.getElementById('stepPlan').classList.add('hidden');
   document.getElementById('stepProfile').classList.remove('hidden');
+
+  // Update URL without reload
+  const url = new URL(window.location);
+  url.searchParams.set('plan', plan);
+  window.history.replaceState({}, '', url);
 };
 
 // ── Step 2: Status ────────────────────────────────────
@@ -39,11 +54,13 @@ window.selectEmailVisible = function (visible) {
 // ── Submit: Email ─────────────────────────────────────
 
 window.submitEmailReg = async function () {
+  const nameEl = document.getElementById('regName');
   const emailEl = document.getElementById('regEmail');
   const passwordEl = document.getElementById('regPassword');
   const statusEl = document.getElementById('regStatus');
   const btn = document.getElementById('btnEmailReg');
 
+  const name = nameEl?.value.trim() || '';
   const email = emailEl?.value.trim();
   const password = passwordEl?.value;
 
@@ -72,6 +89,7 @@ window.submitEmailReg = async function () {
 
   try {
     await window.registerWithEmail(email, password, selectedPlan, {
+      name: name || email.split('@')[0],
       status: selectedStatus,
       emailVisible: emailVisible
     });
@@ -80,10 +98,10 @@ window.submitEmailReg = async function () {
     statusEl.textContent = '✅ 登記成功！即將跳轉...';
     statusEl.classList.remove('hidden');
 
-    // Redirect to thanks
     setTimeout(() => {
       window.location.href = '/thanks?plan=' + encodeURIComponent(selectedPlan)
-        + '&method=email&status=' + encodeURIComponent(selectedStatus);
+        + '&method=email&name=' + encodeURIComponent(name)
+        + '&status=' + encodeURIComponent(selectedStatus);
     }, 1000);
 
   } catch (error) {
@@ -117,6 +135,9 @@ window.submitGoogleReg = async function () {
     return;
   }
 
+  const nameEl = document.getElementById('regName');
+  const name = nameEl?.value.trim() || '';
+
   const btn = document.getElementById('btnGoogleReg');
   const statusEl = document.getElementById('regStatus');
   btn.disabled = true;
@@ -129,8 +150,19 @@ window.submitGoogleReg = async function () {
       emailVisible: emailVisible
     });
 
+    // If the user has a custom name, save it to profile after registration
+    if (name && name.length > 0) {
+      await window.saveUserProfile({
+        name: name,
+        status: selectedStatus,
+        emailVisible: emailVisible,
+        plan: selectedPlan
+      });
+    }
+
     window.location.href = '/thanks?plan=' + encodeURIComponent(selectedPlan)
-      + '&method=google&status=' + encodeURIComponent(selectedStatus);
+      + '&method=google&name=' + encodeURIComponent(name)
+      + '&status=' + encodeURIComponent(selectedStatus);
 
   } catch (error) {
     console.error('Google registration failed:', error);
@@ -145,7 +177,6 @@ window.submitGoogleReg = async function () {
 
 auth.onAuthStateChanged((user) => {
   if (user) {
-    // Already logged in — skip registration, go to thanks
     window.getUserProfile().then((profile) => {
       const plan = profile?.plan || 'A';
       window.location.href = '/thanks?plan=' + encodeURIComponent(plan);
