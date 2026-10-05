@@ -176,7 +176,7 @@
 
     var title = document.getElementById('registrationTitle');
     if (title) {
-      title.textContent = plan === 'A' ? '方案 A：免費訂閱通知' : '方案 B：限量早鳥';
+      title.textContent = plan === 'A' ? '個人 AI 轉型診斷' : '團隊 AI 工作流重設';
     }
 
     // Update the "前往註冊" button href with plan param

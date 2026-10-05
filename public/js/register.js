@@ -27,7 +27,7 @@ window.selectRegPlan = function (plan) {
     el.classList.toggle('selected', el.dataset.plan === plan);
   });
 
-  document.getElementById('selectedPlanLabel').textContent = plan === 'A' ? '方案 A：免費訂閱' : '方案 B：限量早鳥';
+  document.getElementById('selectedPlanLabel').textContent = plan === 'A' ? '個人 AI 轉型診斷' : '團隊 AI 工作流重設';
 
   // Show step 2
   document.getElementById('stepPlan').classList.add('hidden');
