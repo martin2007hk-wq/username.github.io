@@ -14,7 +14,9 @@ let emailVisible = false;
   const planParam = params.get('plan');
   if (planParam === 'A' || planParam === 'B') {
     // Auto-select the plan and skip step 1
-    selectRegPlan(planParam);
+    // The handler is exposed on window below; use that reference during
+    // module initialization so deep links like /register?plan=A work.
+    window.selectRegPlan(planParam);
   }
 })();
 
