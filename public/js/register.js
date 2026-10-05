@@ -9,16 +9,14 @@ let emailVisible = false;
 
 // ── Read plan from URL parameter ────────────────────────
 
-(function initPlanFromUrl() {
+function initPlanFromUrl() {
   const params = new URLSearchParams(window.location.search);
   const planParam = params.get('plan');
   if (planParam === 'A' || planParam === 'B') {
-    // Auto-select the plan and skip step 1
-    // The handler is exposed on window below; use that reference during
-    // module initialization so deep links like /register?plan=A work.
+    // Wait until the handler below has been exposed on window.
     window.selectRegPlan(planParam);
   }
-})();
+}
 
 // ── Step 1: Plan Selection ─────────────────────────────
 
@@ -40,6 +38,12 @@ window.selectRegPlan = function (plan) {
   url.searchParams.set('plan', plan);
   window.history.replaceState({}, '', url);
 };
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initPlanFromUrl, { once: true });
+} else {
+  initPlanFromUrl();
+}
 
 // ── Step 2: Status ────────────────────────────────────
 
