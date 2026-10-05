@@ -438,5 +438,8 @@
   .chat-fab {
     bottom: 20px;
     right: 20px;
+    width: 52px;
+    height: 52px;
+    font-size: 21px;
   }
 }

@@ -1310,3 +1310,52 @@ body { background: var(--bg); }
   }
   .hero .container { transform: none; }
 }
+
+/* ===== Mobile polish ===== */
+@media (max-width: 640px) {
+  :root { --nav-height: 64px; }
+  .container { padding-left: 20px; padding-right: 20px; }
+  .section { padding: 78px 0; }
+  .navbar .container { padding-left: 18px; padding-right: 14px; }
+  .navbar-logo { font-size: 1rem; }
+  .navbar-links.mobile-open { padding: 20px; gap: 18px; }
+  .navbar-links.mobile-open a { font-size: 1rem; }
+  .hero { min-height: auto; padding-top: calc(var(--nav-height) + 74px); padding-bottom: 76px; }
+  .hero-kicker { font-size: .62rem; letter-spacing: .14em; line-height: 1.5; margin-bottom: 16px; }
+  .hero-title { font-size: clamp(2.45rem, 12vw, 3.35rem); line-height: 1.08; letter-spacing: -.06em; }
+  .hero-title .highlight-word { padding: 0 3px; }
+  .hero-subtitle { font-size: .98rem; line-height: 1.75; margin-bottom: 26px; }
+  .hero-actions { gap: 10px; }
+  .hero-actions .btn { width: 100%; min-height: 48px; }
+  .hero-proof { font-size: .74rem; line-height: 1.6; margin-top: 20px; }
+  .section-title { font-size: clamp(1.9rem, 9vw, 2.55rem); line-height: 1.18; }
+  .section-body { font-size: 1rem; line-height: 1.8; }
+  .problem-quote { font-size: clamp(1.85rem, 9vw, 2.55rem); line-height: 1.22; margin-bottom: 28px; }
+  .problem-quote::before, .problem-quote::after { display: none; }
+  .cards-grid, .path-cards, .testimonial-grid { gap: 14px; margin-top: 34px; }
+  .card, .path-card, .testimonial-card { padding: 26px 22px; }
+  .card-title, .path-card-title { font-size: 1.1rem; }
+  .card-desc, .path-card-desc { font-size: .92rem; line-height: 1.7; }
+  .card-meta { font-size: .72rem; line-height: 1.5; }
+  .path-cards-wrapper::before { display: none; }
+  .metric span { display: block; margin: 8px 0 0; font-size: 1.08rem; }
+  .testimonial-text { font-size: .98rem; line-height: 1.75; }
+  .cta-sub { font-size: .98rem; line-height: 1.75; margin-bottom: 24px; }
+  .plan-cards-inline { gap: 12px; margin-top: 28px; }
+  .plan-card-inline { padding: 26px 20px; border-radius: 8px; }
+  .plan-card-inline:hover, .plan-card-inline--selected { transform: none; }
+  .plan-card-inline h3 { font-size: 1.15rem; }
+  .plan-card-inline .plan-price { font-size: 1.7rem; }
+  .registration-area { padding: 1.25rem; margin-top: 1.5rem; }
+  .registration-area .btn-full { min-height: 48px; }
+  .footer { padding: 36px 0 26px; }
+  .footer-links { gap: 14px 20px; }
+  .footer-links a { font-size: .8rem; }
+  .hero-glow { width: 420px; height: 420px; }
+  .hero-glow-2 { width: 280px; height: 280px; }
+}
+
+@media (hover: none) {
+  .card:hover, .path-card:hover, .testimonial-card:hover, .plan-card-inline:hover { transform: none; box-shadow: var(--shadow-card); }
+  .card:hover::after, .path-card:hover::after, .testimonial-card:hover::after { opacity: 0; }
+}
