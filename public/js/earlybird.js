@@ -155,7 +155,7 @@
   }
 
   // ── Inline Plan Selection (bottom section) ──────────────────
-  // After selecting a plan, the user is guided to /register?plan=A|B
+  // Selecting a plan goes straight to registration with the plan preserved.
 
   let selectedPlanInline = null;
 
@@ -168,26 +168,11 @@
     var planCard = document.getElementById('planCard' + plan);
     if (planCard) planCard.classList.add('plan-card-inline--selected');
 
-    var regArea = document.getElementById('registrationArea');
-    if (regArea) {
-      regArea.style.display = 'block';
-      regArea.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-
-    var title = document.getElementById('registrationTitle');
-    if (title) {
-      title.textContent = plan === 'A' ? '個人 AI 轉型診斷' : '團隊 AI 工作流重設';
-    }
-
-    // Update the "前往註冊" button href with plan param
-    var btn = document.getElementById('btnGoRegister');
-    if (btn) {
-      btn.href = '/register?plan=' + plan;
-    }
-
     if (typeof window.trackCTAClick === 'function') {
       window.trackCTAClick(plan === 'A' ? 'plan-a-select' : 'plan-b-select');
     }
+
+    window.location.href = '/register?plan=' + encodeURIComponent(plan);
   }
 
   // Old inline submit functions — now just redirect to /register
