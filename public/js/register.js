@@ -13,8 +13,11 @@ function initPlanFromUrl() {
   const params = new URLSearchParams(window.location.search);
   const planParam = params.get('plan');
   if (planParam === 'A' || planParam === 'B') {
-    // Wait until the handler below has been exposed on window.
-    window.selectRegPlan(planParam);
+    // Keep the confirmation step visible: the visitor selected a plan on the
+    // landing page and must confirm it once more before entering their data.
+    document.querySelectorAll('.reg-plan-card').forEach((el) => {
+      el.classList.toggle('selected', el.dataset.plan === planParam);
+    });
   }
 }
 
