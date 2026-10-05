@@ -1244,3 +1244,69 @@ body { background: var(--bg); }
   from { transform: translateY(100%); }
   to { transform: translateY(0); }
 }
+
+/* ===== Apple-inspired motion system ===== */
+.navbar {
+  transition: background-color .35s ease, box-shadow .35s ease, border-color .35s ease;
+}
+.navbar.is-scrolled {
+  background: rgba(255,253,249,.92);
+  box-shadow: 0 10px 30px rgba(23,33,31,.08);
+  border-color: rgba(23,33,31,.14);
+}
+.hero .container {
+  transform: translateY(calc(var(--hero-shift, 0px) * -.22));
+  transition: transform .12s linear;
+}
+.hero-glow, .hero-glow-2 {
+  transition: transform .5s cubic-bezier(.2,.8,.2,1);
+}
+.hero-glow { animation: floatGlow 9s ease-in-out infinite alternate; }
+.hero-glow-2 { animation: floatGlowTwo 12s ease-in-out infinite alternate; }
+@keyframes floatGlow {
+  from { opacity: .7; transform: translateX(-50%) scale(1); }
+  to { opacity: 1; transform: translateX(-50%) scale(1.08) translate3d(0, 12px, 0); }
+}
+@keyframes floatGlowTwo {
+  from { opacity: .55; transform: translate3d(0, 0, 0); }
+  to { opacity: 1; transform: translate3d(-15px, -10px, 0) scale(1.06); }
+}
+.motion-item {
+  opacity: 0;
+  transform: translateY(26px) scale(.985);
+  transition: opacity .75s cubic-bezier(.2,.7,.2,1), transform .75s cubic-bezier(.2,.7,.2,1), box-shadow .35s ease, border-color .35s ease;
+  transition-delay: var(--motion-delay, 0ms);
+}
+.motion-item.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.card, .path-card, .testimonial-card, .plan-card-inline {
+  will-change: transform;
+}
+.card::after, .path-card::after, .testimonial-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(120deg, rgba(255,255,255,.18), transparent 34%);
+  opacity: 0;
+  transition: opacity .35s ease;
+}
+.card:hover::after, .path-card:hover::after, .testimonial-card:hover::after { opacity: 1; }
+.card, .path-card, .testimonial-card { overflow: hidden; }
+.hero-proof { animation: proofReveal 1s .4s both cubic-bezier(.2,.7,.2,1); }
+@keyframes proofReveal {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  .hero .container { transform: none; }
+}
