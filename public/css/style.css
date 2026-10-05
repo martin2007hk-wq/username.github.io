@@ -1083,6 +1083,12 @@ body { background: var(--bg); }
   text-align: center;
   position: relative;
 }
+.plan-card-inline,
+.plan-card-inline:hover {
+  display: block;
+  color: var(--text);
+  text-decoration: none;
+}
 
 .plan-card-inline:hover {
   border-color: var(--accent, #2563eb);
