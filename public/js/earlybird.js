@@ -168,11 +168,16 @@
     var planCard = document.getElementById('planCard' + plan);
     if (planCard) planCard.classList.add('plan-card-inline--selected');
 
-    if (typeof window.trackCTAClick === 'function') {
-      window.trackCTAClick(plan === 'A' ? 'plan-a-select' : 'plan-b-select');
+    // Analytics must never block the registration journey.
+    try {
+      if (typeof window.trackCTAClick === 'function') {
+        window.trackCTAClick(plan === 'A' ? 'plan-a-select' : 'plan-b-select');
+      }
+    } catch (error) {
+      console.warn('CTA tracking skipped:', error);
     }
 
-    window.location.href = '/register?plan=' + encodeURIComponent(plan);
+    window.location.assign('/register?plan=' + encodeURIComponent(plan));
   }
 
   // Old inline submit functions — now just redirect to /register
@@ -212,6 +217,20 @@
   window.submitGoogleRegistration = submitGoogleRegistration;
   window.selectPlanInline = selectPlanInline;
   window.showToast = showToast;
+
+  // Bind in JavaScript as well as the inline handler so the cards remain
+  // reliable when a browser blocks inline event behavior or restores the page.
+  document.querySelectorAll('.plan-card-inline').forEach(function (card) {
+    card.addEventListener('click', function () {
+      selectPlanInline(card.getAttribute('data-plan'));
+    });
+    card.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        selectPlanInline(card.getAttribute('data-plan'));
+      }
+    });
+  });
 
   window._getSelectedPlan = function () { return selectedPlan; };
 
