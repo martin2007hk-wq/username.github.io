@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>註冊 — PostAIAge</title>
+  <title>加入交流社群 — PostAIAge</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,45 +18,44 @@
 
     <!-- Step 1: Plan Selection -->
     <div class="register-step" id="stepPlan">
-      <h1>先確認你想解決的事</h1>
-      <p class="register-sub">你已在首頁選過一次方案，這裡再確認一次，之後我們才能準備適合你的對話。</p>
+      <h1>加入 PostAIAge 交流社群</h1>
+      <p class="register-sub">建立帳戶後，你可以和其他夥伴交流 AI 如何改變日常工作。想預約工作拆解或團隊流程對話，請使用<a href="/inquiry">服務申請表</a>。</p>
 
       <div class="register-plans">
         <div class="reg-plan-card" data-plan="A" onclick="selectRegPlan('A')">
-          <span class="reg-plan-badge">個人方案</span>
-          <h3>AI 轉型診斷</h3>
-          <p class="reg-plan-price">30 分鐘</p>
-          <p class="reg-plan-desc">整理你的 AI 風險、優勢與下一個可驗證行動。</p>
+          <span class="reg-plan-badge">個人交流</span>
+          <h3>個人夥伴</h3>
+          <p class="reg-plan-price">加入社群</p>
+          <p class="reg-plan-desc">分享你正在摸索的工作改變，也看看其他人如何把 AI 用進日常。</p>
           <ul>
-            <li>✅ 現況與 AI 風險快速盤點</li>
-            <li>✅ 90 日行動方向建議</li>
-            <li>✅ 合作方案與預算透明說明</li>
+            <li>✅ 建立個人社群帳戶</li>
+            <li>✅ 參與夥伴交流</li>
+            <li>✅ 電郵是否公開由你決定</li>
           </ul>
         </div>
 
         <div class="reg-plan-card" data-plan="B" onclick="selectRegPlan('B')">
-          <span class="reg-plan-badge reg-plan-badge--hot">團隊方案</span>
-          <h3>AI 工作流重設</h3>
-          <p class="reg-plan-price">4–12 週<span>按需定制</span></p>
-          <p class="reg-plan-desc">從一個高價值場景開始，設計並試跑人機協作。</p>
+          <span class="reg-plan-badge reg-plan-badge--hot">共建交流</span>
+          <h3>團隊夥伴</h3>
+          <p class="reg-plan-price">加入社群</p>
+          <p class="reg-plan-desc">適合想交流團隊採用 AI、流程調整與實際落地經驗的人。</p>
           <ul>
-            <li>✅ 目標與流程共同診斷</li>
-            <li>✅ 真實項目試跑與迭代</li>
-            <li>✅ 團隊 playbook 與交接</li>
-            <li>✅ 以成果為導向的檢視節奏</li>
+            <li>✅ 建立團隊社群帳戶</li>
+            <li>✅ 交流團隊導入經驗</li>
+            <li>✅ 電郵是否公開由你決定</li>
           </ul>
         </div>
       </div>
 
       <div class="disclaimer-banner">
-        你可以隨時返回首頁重新選擇；現在只是確認方向，不會自動扣款。
+        社群帳戶不等於服務預約。若要討論你的實際工作問題，請提交服務申請，我們會再與你確認時間。
       </div>
     </div>
 
     <!-- Step 2: Profile Details -->
     <div class="register-step hidden" id="stepProfile">
-      <h1>讓我們先認識你的情況</h1>
-      <p class="register-sub">你選的是 <strong id="selectedPlanLabel">-</strong>。填寫幾項資料，我們才知道該從哪裡開始。</p>
+      <h1>建立你的社群帳戶</h1>
+      <p class="register-sub">你選的是 <strong id="selectedPlanLabel">-</strong>。簡單介紹自己，之後可以登入和夥伴交流。</p>
 
       <!-- Name -->
       <div class="register-section">
@@ -66,14 +65,14 @@
 
       <!-- Status Picker -->
       <div class="register-section">
-        <label class="register-label">最近哪一件事最讓你花時間？</label>
+        <label class="register-label">你最想和夥伴交流哪一件事？</label>
         <div class="status-options">
           <label class="status-option">
             <input type="radio" name="status" value="unemployed" onchange="selectStatus('unemployed')">
             <div class="status-card">
               <span class="status-icon">🔴</span>
               <strong>工作太多，總是做不完</strong>
-              <small>想先把重複工作整理好</small>
+              <small>想分享哪些事情適合交給 AI</small>
             </div>
           </label>
           <label class="status-option">
@@ -81,7 +80,7 @@
             <div class="status-card">
               <span class="status-icon">🟡</span>
               <strong>團隊各自用各自的工具</strong>
-              <small>想建立一套大家跟得到的方法</small>
+              <small>想交流如何讓團隊用得一致</small>
             </div>
           </label>
           <label class="status-option">
@@ -89,7 +88,7 @@
             <div class="status-card">
               <span class="status-icon">🟢</span>
               <strong>不知道從哪裡開始</strong>
-              <small>試過幾個工具，但未能放進日常</small>
+              <small>想從一個實際工作場景開始</small>
             </div>
           </label>
           <label class="status-option">
@@ -97,7 +96,7 @@
             <div class="status-card">
               <span class="status-icon">🟣</span>
               <strong>有其他具體問題</strong>
-              <small>我會在下一步和你慢慢說</small>
+              <small>先加入社群，再慢慢認識大家</small>
             </div>
           </label>
         </div>
@@ -152,7 +151,7 @@
   <!-- Toast Container -->
   <div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
-  <script type="module" src="js/auth.js?v=7"></script>
-  <script type="module" src="js/register.js?v=2"></script>
+  <script type="module" src="js/auth.js?v=8"></script>
+  <script type="module" src="js/register.js?v=3"></script>
 </body>
 </html>

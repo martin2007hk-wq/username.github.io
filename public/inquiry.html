@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="告訴我們你想改善的工作，我們會先了解情況，再聯絡你安排一次方向對話。">
+  <title>預約方向對話 — PostAIAge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/register.css?v=3">
+</head>
+<body class="register-body">
+  <main class="register-container inquiry-container">
+    <a href="/#early-bird" class="register-back">← 返回服務方案</a>
+
+    <section class="register-step" id="inquiryPlanStep">
+      <p class="section-label">先選一個方向</p>
+      <h1>你最想先處理哪件事？</h1>
+      <p class="register-sub">選好後再確認一次，我們會按你的情況準備對話。</p>
+      <div class="register-plans inquiry-plans">
+        <button type="button" class="reg-plan-card inquiry-plan" data-plan="A">
+          <span class="reg-plan-badge">個人</span>
+          <h3>整理我自己的工作</h3>
+          <p class="reg-plan-desc">找出一週裡最重複、最花時間的一件事，看看怎樣先改善。</p>
+          <span class="inquiry-plan-action">選擇個人方向 →</span>
+        </button>
+        <button type="button" class="reg-plan-card inquiry-plan" data-plan="B">
+          <span class="reg-plan-badge reg-plan-badge--hot">團隊</span>
+          <h3>改善團隊的一個流程</h3>
+          <p class="reg-plan-desc">從客服、研究、報價或內容工作中，選一個每天都在做的流程。</p>
+          <span class="inquiry-plan-action">選擇團隊方向 →</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="register-step hidden" id="inquiryFormStep">
+      <button type="button" class="inquiry-back" id="changeInquiryPlan">← 返回更改方向</button>
+      <p class="section-label">讓我們先了解情況</p>
+      <h1 id="inquiryTitle">預約方向對話</h1>
+      <p class="register-sub">不用準備簡報，也不用先懂 AI。簡單說說你最近卡在哪裡就可以。</p>
+
+      <form id="inquiryForm" novalidate>
+        <label class="register-label" for="inquiryName">我們怎樣稱呼你？</label>
+        <input class="reg-text-input inquiry-input" id="inquiryName" name="name" autocomplete="name" maxlength="60" required placeholder="你的名字或稱呼">
+
+        <label class="register-label" for="inquiryEmail">用哪個電郵聯絡你？</label>
+        <input class="reg-text-input inquiry-input" id="inquiryEmail" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="你平時收得到信的電郵">
+
+        <label class="register-label" for="inquiryProblem">最近哪一件工作最花你的時間？</label>
+        <textarea class="reg-text-input inquiry-input inquiry-textarea" id="inquiryProblem" name="problem" maxlength="1200" required placeholder="例如：每週要手動整理大量客戶問題，常常重複回覆。"></textarea>
+
+        <div class="inquiry-consent">
+          <label><input type="checkbox" id="inquiryConsent" required> 我同意 PostAIAge 使用以上資料回覆這次預約申請。</label>
+          <p>資料只用於聯絡和了解這次需求，不會公開在社區名單。</p>
+        </div>
+        <div class="inquiry-status" id="inquiryStatus" role="status" aria-live="polite"></div>
+        <button class="btn-register btn-email" id="inquirySubmit" type="submit">提交申請，安排對話 →</button>
+        <p class="inquiry-followup">提交後我們會在兩個工作日內聯絡你安排時間。送出申請不代表時段已確認。</p>
+      </form>
+    </section>
+  </main>
+  <script type="module" src="js/inquiry.js?v=1"></script>
+</body>
+</html>

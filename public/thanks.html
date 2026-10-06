@@ -110,8 +110,8 @@
       <p class="thanks-email" id="thanksEmail"></p>
       <div id="thanksBadge"></div>
       <p class="thanks-message" id="thanksMessage"></p>
-      <p class="thanks-sub">謝謝你把這一步交給我們。我們會按你留下的資料聯絡你，和你一起找出最值得先處理的工作。</p>
-      <a href="/" class="thanks-back">返回主頁</a>
+      <p class="thanks-sub">社群帳戶已建立。這不是服務預約；若你想談自己的工作問題，請提交服務申請，我們會再與你確認時間。</p>
+      <a href="/chat" class="thanks-back">進入交流社群</a>
     </div>
 
     <!-- Conversion Attribution Summary (hidden, for analytics) -->
@@ -124,7 +124,7 @@
       const params = new URLSearchParams(window.location.search);
       const plan = params.get('plan') || 'A';
       const method = params.get('method') || 'email';
-      const name = params.get('name') || 'Early Bird';
+      const name = params.get('name') || '新夥伴';
       const email = params.get('email') || '';
       const avatar = params.get('avatar') || '';
 
@@ -138,7 +138,7 @@
       }
 
       // Name
-      document.getElementById('thanksName').textContent = '歡迎加入，' + name + '！';
+      document.getElementById('thanksName').textContent = '歡迎加入社群，' + name + '！';
 
       // Email (only for email method)
       if (email) {
@@ -151,18 +151,18 @@
       const badge = document.getElementById('thanksBadge');
       if (plan === 'B') {
         badge.className = 'thanks-badge thanks-badge--planB';
-        badge.textContent = '團隊流程共建已記錄';
+        badge.textContent = '團隊夥伴';
       } else {
         badge.className = 'thanks-badge thanks-badge--planA';
-        badge.textContent = '個人工作拆解已記錄';
+        badge.textContent = '個人夥伴';
       }
 
       // Message
       const msg = document.getElementById('thanksMessage');
       if (plan === 'B') {
-        msg.textContent = '我們會先了解你團隊的一個真實流程，再一起決定從哪裡開始試。';
+        msg.textContent = '歡迎分享你對團隊 AI 協作的想法，和夥伴一起交流實際做法。';
       } else {
-        msg.textContent = '下一封電郵會告訴你怎樣準備方向對話，以及你可以先帶來的問題。';
+        msg.textContent = '歡迎分享你正在摸索的工作改變，也看看夥伴們如何把 AI 用進日常。';
       }
 
       // ── Cookie: Mark session as registered ─────────────────

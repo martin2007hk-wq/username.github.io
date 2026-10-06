@@ -52,12 +52,12 @@ function render() {
     // ── Logged Out: 登入 + 註冊 ──
     navCta.innerHTML = `
       <button class="btn btn-outline btn-sm" id="btnLogin">登入</button>
-      <button class="btn btn-primary btn-sm" id="btnRegister">註冊</button>
+      <button class="btn btn-primary btn-sm" id="btnRegister">預約對話</button>
     `;
 
     document.getElementById('btnLogin')?.addEventListener('click', openLoginModal);
     document.getElementById('btnRegister')?.addEventListener('click', () => {
-      window.location.href = '/register';
+      window.location.href = '/inquiry';
     });
   }
 }

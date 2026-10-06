@@ -7,7 +7,7 @@
  * Depends on: auth.js (exports auth, db), chat.js (exports ChatManager)
  */
 
-import { auth, db } from './auth.js?v=7';
+import { auth, db } from './auth.js?v=8';
 import { ChatManager } from './chat.js?v=7';
 import {
   collection,
@@ -66,7 +66,7 @@ class ChatPage {
     this.userListEl.innerHTML = '<div class="chat-user-list-empty">正在找可以交流的夥伴…</div>';
 
     try {
-      const registrationsRef = collection(db, 'registrations');
+      const registrationsRef = collection(db, 'publicProfiles');
       const q = query(registrationsRef);
       const snapshot = await getDocs(q);
 
@@ -76,15 +76,15 @@ class ChatPage {
 
       snapshot.forEach((doc) => {
         const data = doc.data();
-        if (!data.uid) return;
-        if (data.uid === this.currentUser.uid) return;
-        if (seenUids.has(data.uid)) return;
-        seenUids.add(data.uid);
+        const uid = data.uid || doc.id;
+        if (uid === this.currentUser.uid) return;
+        if (seenUids.has(uid)) return;
+        seenUids.add(uid);
 
         users.push({
-          uid: data.uid,
+          uid: uid,
           name: data.name || 'Anonymous',
-          email: data.email || null,
+          email: data.emailVisible === true ? (data.email || null) : null,
           avatar: data.avatar || null,
           plan: data.plan || null
         });

@@ -1,7 +1,7 @@
 /**
  * PostAIAge Register Page Logic
  */
-import { auth } from './auth.js?v=7';
+import { auth } from './auth.js?v=8';
 
 let selectedPlan = null;
 let selectedStatus = null;
@@ -30,7 +30,7 @@ window.selectRegPlan = function (plan) {
     el.classList.toggle('selected', el.dataset.plan === plan);
   });
 
-  document.getElementById('selectedPlanLabel').textContent = plan === 'A' ? '個人工作拆解' : '團隊流程共建';
+  document.getElementById('selectedPlanLabel').textContent = plan === 'A' ? '個人交流' : '共建交流';
 
   // Show step 2
   document.getElementById('stepPlan').classList.add('hidden');
@@ -83,11 +83,11 @@ window.submitEmailReg = async function () {
     return;
   }
   if (!selectedPlan) {
-    showToast('請先確認你想開始的方案', 'error');
+    showToast('請先選擇你的交流方式', 'error');
     return;
   }
   if (!selectedStatus) {
-    showToast('請先告訴我們最近最困擾你的工作情況', 'error');
+    showToast('請選擇你最想交流的主題', 'error');
     return;
   }
 
@@ -136,11 +136,11 @@ window.submitEmailReg = async function () {
 
 window.submitGoogleReg = async function () {
   if (!selectedPlan) {
-    showToast('請先確認你的方案', 'error');
+    showToast('請先選擇你的交流方式', 'error');
     return;
   }
   if (!selectedStatus) {
-    showToast('請先告訴我們最近最困擾你的工作情況', 'error');
+    showToast('請選擇你最想交流的主題', 'error');
     return;
   }
 

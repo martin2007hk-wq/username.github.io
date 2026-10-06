@@ -43,6 +43,15 @@ window.saveUserProfile = async function (data) {
     createdAt: serverTimestamp()
   }, { merge: true });
 
+  await setDoc(doc(db, 'publicProfiles', user.uid), {
+    name: data.name || user.displayName || (user.email ? user.email.split('@')[0] : 'Anonymous'),
+    avatar: data.avatar || user.photoURL || null,
+    plan: data.plan || null,
+    emailVisible: data.emailVisible === true,
+    email: data.emailVisible === true ? (data.email || user.email || null) : null,
+    updatedAt: serverTimestamp()
+  }, { merge: true });
+
   // Update cache
   _cachedProfile = data;
   console.log('PostAIAge: Profile saved', data);
@@ -263,6 +272,17 @@ onAuthStateChanged(auth, (user) => {
     console.log('PostAIAge: 用户已登入', user.displayName || user.email);
     // Load profile and dispatch event
     window.getUserProfile().then((profile) => {
+      // Backfill a minimal public directory record for existing members.
+      setDoc(doc(db, 'publicProfiles', user.uid), {
+        name: profile?.name || user.displayName || (user.email ? user.email.split('@')[0] : 'Anonymous'),
+        avatar: profile?.avatar || user.photoURL || null,
+        plan: profile?.plan || null,
+        emailVisible: profile?.emailVisible === true,
+        email: profile?.emailVisible === true ? (profile?.email || user.email || null) : null,
+        updatedAt: serverTimestamp()
+      }, { merge: true }).catch((error) => {
+        console.warn('PostAIAge: public directory profile was not updated', error);
+      });
       window.dispatchEvent(new CustomEvent('postaiage:authchange', {
         detail: {
           user: user,

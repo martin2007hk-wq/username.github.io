@@ -63,15 +63,59 @@ service cloud.firestore {
         || request.time >= rateDoc.data.lastMessageAt + duration.value(2, 's');
     }
 
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    // Existing: Registrations (unchanged)
-    // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+    // Private service inquiries: anyone may submit a validated request,
+    // while client applications can never read, change, or delete requests.
+    match /consultationRequests/{requestId} {
+      allow create: if request.resource.data.keys().hasAll([
+                      'plan', 'name', 'email', 'problem', 'consent', 'source', 'createdAt'
+                    ])
+                    && request.resource.data.keys().hasOnly([
+                      'plan', 'name', 'email', 'problem', 'consent', 'source', 'createdAt'
+                    ])
+                    && request.resource.data.plan in ['A', 'B']
+                    && request.resource.data.name is string
+                    && request.resource.data.name.size() >= 1
+                    && request.resource.data.name.size() <= 60
+                    && request.resource.data.email is string
+                    && request.resource.data.email.size() <= 254
+                    && request.resource.data.email.matches('.*@.*\\..*')
+                    && request.resource.data.problem is string
+                    && request.resource.data.problem.size() >= 10
+                    && request.resource.data.problem.size() <= 1200
+                    && request.resource.data.consent == true
+                    && request.resource.data.source == 'website'
+                    && request.resource.data.createdAt == request.time;
+      allow read, update, delete: if false;
+    }
+
+    // Legacy account registration records may still be written by their owner.
+    // They contain private fields and are no longer used as the community list.
     match /registrations/{docId} {
-      allow create: if request.resource.data.plan is string
+      allow create: if isAuth()
+                    && request.resource.data.uid == request.auth.uid
+                    && request.resource.data.plan is string
                     && request.resource.data.method is string
                     && request.resource.data.name is string;
-      allow read: if isAuth();
+      allow read: if false;
       allow update, delete: if false;
+    }
+
+    // Community directory: only the fields intended for member display.
+    match /publicProfiles/{uid} {
+      allow read: if isAuth();
+      allow create, update: if isAuth()
+        && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly([
+          'name', 'avatar', 'plan', 'emailVisible', 'email', 'updatedAt'
+        ])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() <= 60
+        && request.resource.data.emailVisible is bool
+        && (request.resource.data.emailVisible == false
+          ? request.resource.data.email == null
+          : request.resource.data.email is string)
+        && request.resource.data.updatedAt == request.time;
+      allow delete: if false;
     }
 
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -115,7 +159,7 @@ service cloud.firestore {
     // Users Collection (public profiles + rate limits)
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
     match /users/{uid} {
-      allow read: if isAuth();
+      allow read: if isAuth() && request.auth.uid == uid;
       allow create, update: if isAuth() && request.auth.uid == uid;
       allow delete: if false;
 

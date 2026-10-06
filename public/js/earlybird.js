@@ -155,7 +155,7 @@
   }
 
   // ── Inline Plan Selection (bottom section) ──────────────────
-  // Selecting a plan goes straight to registration with the plan preserved.
+  // Selecting a plan opens the inquiry flow with the plan preserved.
 
   let selectedPlanInline = null;
 
@@ -177,20 +177,20 @@
       console.warn('CTA tracking skipped:', error);
     }
 
-    window.location.assign('/register?plan=' + encodeURIComponent(plan));
+    window.location.assign('/inquiry?plan=' + encodeURIComponent(plan));
   }
 
   // Old inline submit functions — now just redirect to /register
   window.submitEmailRegistrationInline = function () {
     if (selectedPlanInline) {
-      window.location.href = '/register?plan=' + selectedPlanInline;
+      window.location.href = '/inquiry?plan=' + selectedPlanInline;
     } else {
       showToast('請先選擇一個方案', 'error');
     }
   };
   window.submitGoogleRegistrationInline = function () {
     if (selectedPlanInline) {
-      window.location.href = '/register?plan=' + selectedPlanInline;
+      window.location.href = '/inquiry?plan=' + selectedPlanInline;
     } else {
       showToast('請先選擇一個方案', 'error');
     }
