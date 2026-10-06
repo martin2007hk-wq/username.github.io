@@ -18,8 +18,8 @@
 
     <!-- Step 1: Plan Selection -->
     <div class="register-step" id="stepPlan">
-      <h1>選擇你的方案</h1>
-      <p class="register-sub">請再次確認你的方案，然後開始登記。</p>
+      <h1>先確認你想解決的事</h1>
+      <p class="register-sub">你已在首頁選過一次方案，這裡再確認一次，之後我們才能準備適合你的對話。</p>
 
       <div class="register-plans">
         <div class="reg-plan-card" data-plan="A" onclick="selectRegPlan('A')">
@@ -49,55 +49,55 @@
       </div>
 
       <div class="disclaimer-banner">
-        你已在首頁選擇方案；請在上方再次確認後進入資料登記。本次不會自動扣款。
+        你可以隨時返回首頁重新選擇；現在只是確認方向，不會自動扣款。
       </div>
     </div>
 
     <!-- Step 2: Profile Details -->
     <div class="register-step hidden" id="stepProfile">
-      <h1>完善你的資料</h1>
-      <p class="register-sub">方案 <strong id="selectedPlanLabel">-</strong></p>
+      <h1>讓我們先認識你的情況</h1>
+      <p class="register-sub">你選的是 <strong id="selectedPlanLabel">-</strong>。填寫幾項資料，我們才知道該從哪裡開始。</p>
 
       <!-- Name -->
       <div class="register-section">
-        <label class="register-label">你嘅稱呼</label>
-        <input type="text" id="regName" placeholder="輸入你嘅名/花名" class="reg-text-input" maxlength="50">
+        <label class="register-label">我們應該怎樣稱呼你？</label>
+        <input type="text" id="regName" placeholder="姓名或你習慣的稱呼" class="reg-text-input" maxlength="50">
       </div>
 
       <!-- Status Picker -->
       <div class="register-section">
-        <label class="register-label">你目前嘅身份？</label>
+        <label class="register-label">最近哪一件事最讓你花時間？</label>
         <div class="status-options">
           <label class="status-option">
             <input type="radio" name="status" value="unemployed" onchange="selectStatus('unemployed')">
             <div class="status-card">
               <span class="status-icon">🔴</span>
-              <strong>失業中</strong>
-              <small>正在尋找新嘅方向</small>
+              <strong>工作太多，總是做不完</strong>
+              <small>想先把重複工作整理好</small>
             </div>
           </label>
           <label class="status-option">
             <input type="radio" name="status" value="fear_unemployment" onchange="selectStatus('fear_unemployment')">
             <div class="status-card">
               <span class="status-icon">🟡</span>
-              <strong>害怕失業</strong>
-              <small>擔心 AI 取代目前工作</small>
+              <strong>團隊各自用各自的工具</strong>
+              <small>想建立一套大家跟得到的方法</small>
             </div>
           </label>
           <label class="status-option">
             <input type="radio" name="status" value="student" onchange="selectStatus('student')">
             <div class="status-card">
               <span class="status-icon">🟢</span>
-              <strong>學生</strong>
-              <small>準備進入職場</small>
+              <strong>不知道從哪裡開始</strong>
+              <small>試過幾個工具，但未能放進日常</small>
             </div>
           </label>
           <label class="status-option">
             <input type="radio" name="status" value="other" onchange="selectStatus('other')">
             <div class="status-card">
               <span class="status-icon">🟣</span>
-              <strong>其他</strong>
-              <small>關心後 AI 時代</small>
+              <strong>有其他具體問題</strong>
+              <small>我會在下一步和你慢慢說</small>
             </div>
           </label>
         </div>
@@ -105,33 +105,33 @@
 
       <!-- Email Visibility -->
       <div class="register-section">
-        <label class="register-label">是否願意公開電郵畀其他社群成員？（方便交流）</label>
+        <label class="register-label">你願意讓其他夥伴看到你的電郵嗎？（可選）</label>
         <div class="toggle-row">
           <label class="toggle-label">
             <input type="radio" name="emailVisible" value="yes" onchange="selectEmailVisible(true)">
-            <span class="toggle-card">🟢 願意顯示</span>
+            <span class="toggle-card">🟢 可以，方便交流</span>
           </label>
           <label class="toggle-label">
             <input type="radio" name="emailVisible" value="no" checked onchange="selectEmailVisible(false)">
-            <span class="toggle-card">🔒 不顯示</span>
+            <span class="toggle-card">🔒 不公開，先保留私隱</span>
           </label>
         </div>
       </div>
 
       <!-- Registration Methods -->
       <div class="register-section" id="regMethods">
-        <label class="register-label">選擇註冊方式</label>
+        <label class="register-label">最後，選一個登入方式</label>
 
         <!-- Email -->
         <div class="reg-method-box">
-          <h4>📧 以 Email 登記</h4>
-          <input type="email" id="regEmail" placeholder="輸入你的電郵地址" required>
-          <input type="password" id="regPassword" placeholder="設定密碼（最少6位）" required minlength="6">
+          <h4>📧 用電郵建立帳戶</h4>
+          <input type="email" id="regEmail" placeholder="你平時收得到信的電郵" required>
+          <input type="password" id="regPassword" placeholder="設定密碼（至少 6 個字元）" required minlength="6">
           <p class="privacy-note">
-            🔐 填寫即代表同意我們在服務上線時透過 Email 通知您，資料不會作其他用途。
+            🔐 我們只會用這個電郵聯絡你和管理帳戶，不會把資料賣給其他人。
           </p>
           <button class="btn-register btn-email" id="btnEmailReg" onclick="submitEmailReg()">
-            確認登記 →
+          建立帳戶，繼續 →
           </button>
         </div>
 
@@ -140,7 +140,7 @@
         <!-- Google -->
         <button class="btn-register btn-google" id="btnGoogleReg" onclick="submitGoogleReg()">
           <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-          以 Google 帳戶繼續
+          用 Google 帳戶繼續
         </button>
       </div>
 

@@ -29,11 +29,11 @@
     <!-- Sidebar: User List -->
     <aside class="chat-sidebar" id="chatSidebar">
       <div class="chat-sidebar-header">
-        <h2>社區成員</h2>
+        <h2>一起工作的夥伴</h2>
         <span class="chat-sidebar-count" id="userCount"></span>
       </div>
       <div class="chat-sidebar-search">
-        <input type="text" id="userSearch" placeholder="搜尋成員..." autocomplete="off">
+        <input type="text" id="userSearch" placeholder="搜尋名字或電郵…" autocomplete="off">
       </div>
       <div class="chat-user-list" id="chatUserList">
         <div class="chat-user-list-empty">載入中...</div>
@@ -45,8 +45,8 @@
       <!-- Empty State -->
       <div class="chat-main-empty" id="chatMainEmpty">
         <div class="chat-main-empty-icon">💬</div>
-        <h2>選擇一位社區成員開始對話</h2>
-        <p>從左邊的成員列表中選擇你想聊天的對象</p>
+        <h2>選一位夥伴，開始一句真實的對話</h2>
+        <p>可以分享你正在處理的工作，也可以先從「你最近怎樣用工具？」開始。</p>
       </div>
 
       <!-- Active Chat Panel (hidden until user selected) -->
@@ -67,7 +67,7 @@
             class="chat-input"
             id="chatInput"
             rows="1"
-            placeholder="輸入訊息..."
+          placeholder="寫下你想分享或想問的事…"
             maxlength="5000"
           ></textarea>
           <button class="chat-send-btn" id="chatSendBtn" aria-label="發送訊息">➤</button>

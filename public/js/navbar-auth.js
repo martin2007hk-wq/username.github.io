@@ -30,7 +30,7 @@ function render() {
     // ── Logged In: avatar + plan + logout ──
     const avatar = _profile?.avatar || _user.photoURL;
     const name = _profile?.name || _user.displayName || (_user.email ? _user.email.split('@')[0] : 'User');
-    const planLabel = _profile?.plan === 'B' ? '🔥 早鳥' : (_profile?.plan === 'A' ? '📩 訂閱' : '');
+    const planLabel = _profile?.plan === 'B' ? '團隊流程共建' : (_profile?.plan === 'A' ? '個人工作拆解' : '');
 
     navCta.innerHTML = `
       <div class="navbar-user">
@@ -126,11 +126,11 @@ window.submitLoginEmail = async function () {
     window.closeLoginModal();
   } catch (err) {
     console.error('Login failed:', err);
-    let msg = '登入失敗，請檢查電郵同密碼';
-    if (err.code === 'auth/invalid-credential') msg = '電郵或密碼錯誤';
-    else if (err.code === 'auth/user-not-found') msg = '呢個電郵尚未註冊';
-    else if (err.code === 'auth/wrong-password') msg = '密碼錯誤';
-    else if (err.code === 'auth/too-many-requests') msg = '嘗試次數過多，請稍後再試';
+    let msg = '登入未成功，請檢查電郵和密碼';
+    if (err.code === 'auth/invalid-credential') msg = '電郵或密碼不正確';
+    else if (err.code === 'auth/user-not-found') msg = '這個電郵還未建立帳戶';
+    else if (err.code === 'auth/wrong-password') msg = '密碼不正確';
+    else if (err.code === 'auth/too-many-requests') msg = '嘗試次數太多，休息一會再試';
     showLoginError(msg);
   } finally {
     btn.disabled = false;

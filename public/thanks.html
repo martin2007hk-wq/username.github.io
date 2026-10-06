@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>登記成功 | PostAIAge</title>
+  <title>收到你的資料 | PostAIAge</title>
   <link rel="stylesheet" href="css/style.css">
   <style>
     .thanks-container {
@@ -110,7 +110,7 @@
       <p class="thanks-email" id="thanksEmail"></p>
       <div id="thanksBadge"></div>
       <p class="thanks-message" id="thanksMessage"></p>
-      <p class="thanks-sub">我哋會喺服務上線時第一時間通知你。Stay tuned! 🚀</p>
+      <p class="thanks-sub">謝謝你把這一步交給我們。我們會按你留下的資料聯絡你，和你一起找出最值得先處理的工作。</p>
       <a href="/" class="thanks-back">返回主頁</a>
     </div>
 
@@ -151,18 +151,18 @@
       const badge = document.getElementById('thanksBadge');
       if (plan === 'B') {
         badge.className = 'thanks-badge thanks-badge--planB';
-        badge.textContent = '🔥 限量早鳥資格已鎖定';
+        badge.textContent = '團隊流程共建已記錄';
       } else {
         badge.className = 'thanks-badge thanks-badge--planA';
-        badge.textContent = '📩 上線通知已登記';
+        badge.textContent = '個人工作拆解已記錄';
       }
 
       // Message
       const msg = document.getElementById('thanksMessage');
       if (plan === 'B') {
-        msg.textContent = '你已成功鎖定 6 折最低價同所有早鳥權益！';
+        msg.textContent = '我們會先了解你團隊的一個真實流程，再一起決定從哪裡開始試。';
       } else {
-        msg.textContent = '服務上線時你會第一時間收到 8 折優惠碼！';
+        msg.textContent = '下一封電郵會告訴你怎樣準備方向對話，以及你可以先帶來的問題。';
       }
 
       // ── Cookie: Mark session as registered ─────────────────

@@ -30,7 +30,7 @@ window.selectRegPlan = function (plan) {
     el.classList.toggle('selected', el.dataset.plan === plan);
   });
 
-  document.getElementById('selectedPlanLabel').textContent = plan === 'A' ? '個人 AI 轉型診斷' : '團隊 AI 工作流重設';
+  document.getElementById('selectedPlanLabel').textContent = plan === 'A' ? '個人工作拆解' : '團隊流程共建';
 
   // Show step 2
   document.getElementById('stepPlan').classList.add('hidden');
@@ -75,25 +75,25 @@ window.submitEmailReg = async function () {
 
   // Validation
   if (!email || email.indexOf('@') === -1) {
-    showToast('請輸入有效嘅電郵地址', 'error');
+    showToast('請輸入一個收得到信的電郵地址', 'error');
     return;
   }
   if (!password || password.length < 6) {
-    showToast('密碼最少需要6位字符', 'error');
+    showToast('密碼至少需要 6 個字元', 'error');
     return;
   }
   if (!selectedPlan) {
-    showToast('請選擇方案', 'error');
+    showToast('請先確認你想開始的方案', 'error');
     return;
   }
   if (!selectedStatus) {
-    showToast('請選擇你目前嘅身份', 'error');
+    showToast('請先告訴我們最近最困擾你的工作情況', 'error');
     return;
   }
 
   // Disable button
   btn.disabled = true;
-  btn.textContent = '登記中...';
+  btn.textContent = '正在建立你的帳戶...';
   statusEl.classList.add('hidden');
 
   try {
@@ -104,7 +104,7 @@ window.submitEmailReg = async function () {
     });
 
     statusEl.className = 'reg-status success';
-    statusEl.textContent = '✅ 登記成功！即將跳轉...';
+    statusEl.textContent = '✅ 帳戶已建立，正在帶你去下一步...';
     statusEl.classList.remove('hidden');
 
     setTimeout(() => {
@@ -117,18 +117,18 @@ window.submitEmailReg = async function () {
     console.error('Registration failed:', error);
     statusEl.className = 'reg-status error';
     if (error.code === 'auth/weak-password') {
-      statusEl.textContent = '密碼太弱，請設定一個更強嘅密碼。';
+      statusEl.textContent = '密碼太容易猜，請換一個更安全的組合。';
     } else if (error.code === 'auth/email-already-in-use') {
-      statusEl.textContent = '呢個電郵已經註冊過，請改用登入。';
+      statusEl.textContent = '這個電郵已經有帳戶，請回到首頁登入。';
     } else if (error.code === 'auth/too-many-requests') {
-      statusEl.textContent = '嘗試次數過多，請稍後再試。';
+      statusEl.textContent = '嘗試次數太多，請休息一會再試。';
     } else {
-      statusEl.textContent = '登記失敗：' + (error.message || '請再試一次');
+      statusEl.textContent = '未能完成登記：' + (error.message || '請稍後再試');
     }
     statusEl.classList.remove('hidden');
   } finally {
     btn.disabled = false;
-    btn.textContent = '確認登記 →';
+    btn.textContent = '建立帳戶，繼續 →';
   }
 };
 
@@ -136,11 +136,11 @@ window.submitEmailReg = async function () {
 
 window.submitGoogleReg = async function () {
   if (!selectedPlan) {
-    showToast('請選擇方案', 'error');
+    showToast('請先確認你的方案', 'error');
     return;
   }
   if (!selectedStatus) {
-    showToast('請選擇你目前嘅身份', 'error');
+    showToast('請先告訴我們最近最困擾你的工作情況', 'error');
     return;
   }
 
@@ -150,7 +150,7 @@ window.submitGoogleReg = async function () {
   const btn = document.getElementById('btnGoogleReg');
   const statusEl = document.getElementById('regStatus');
   btn.disabled = true;
-  btn.textContent = '登入中...';
+  btn.textContent = '正在連接 Google...';
   statusEl.classList.add('hidden');
 
   try {
@@ -175,10 +175,10 @@ window.submitGoogleReg = async function () {
 
   } catch (error) {
     console.error('Google registration failed:', error);
-    showToast('Google 登入失敗，請再試一次', 'error');
+    showToast('Google 暫時未能完成登入，請再試一次', 'error');
   } finally {
     btn.disabled = false;
-    btn.textContent = '以 Google 帳戶繼續';
+    btn.textContent = '用 Google 帳戶繼續';
   }
 };
 

@@ -63,7 +63,7 @@ class ChatPage {
   // ── Load Registered Users ──────────────
   async _loadUsers() {
     if (!this.userListEl) return;
-    this.userListEl.innerHTML = '<div class="chat-user-list-empty">載入中...</div>';
+    this.userListEl.innerHTML = '<div class="chat-user-list-empty">正在找可以交流的夥伴…</div>';
 
     try {
       const registrationsRef = collection(db, 'registrations');
@@ -102,7 +102,7 @@ class ChatPage {
     } catch (error) {
       console.error('Failed to load users:', error);
       if (this.userListEl) {
-        this.userListEl.innerHTML = '<div class="chat-user-list-empty">載入失敗，請重新整理頁面</div>';
+        this.userListEl.innerHTML = '<div class="chat-user-list-empty">暫時未能載入夥伴，請重新整理試試。</div>';
       }
     }
   }
@@ -112,7 +112,7 @@ class ChatPage {
     if (!this.userListEl) return;
 
     if (users.length === 0) {
-      this.userListEl.innerHTML = '<div class="chat-user-list-empty">暫無其他已註冊成員</div>';
+      this.userListEl.innerHTML = '<div class="chat-user-list-empty">現在還沒有其他夥伴加入；過一會再來看看。</div>';
       return;
     }
 
@@ -123,8 +123,8 @@ class ChatPage {
         ? `<img src="${this._escapeHtml(user.avatar)}" alt="${this._escapeHtml(user.name)}">`
         : initial;
       const planBadge = user.plan === 'B'
-        ? '<span class="chat-user-item-badge plan-b">🔥 早鳥</span>'
-        : (user.plan === 'A' ? '<span class="chat-user-item-badge plan-a">📩</span>' : '');
+        ? '<span class="chat-user-item-badge plan-b">團隊</span>'
+        : (user.plan === 'A' ? '<span class="chat-user-item-badge plan-a">個人</span>' : '');
 
       html += `
         <div class="chat-user-item" data-uid="${this._escapeHtml(user.uid)}">

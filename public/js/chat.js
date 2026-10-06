@@ -648,7 +648,7 @@ class ChatManager {
       <div class="chat-empty">
         <span class="chat-empty-icon">💬</span>
         <p class="chat-empty-text">尚未開始對話</p>
-        <p class="chat-empty-sub">請從社區頁面選擇一位成員開始聊天</p>
+        <p class="chat-empty-sub">選一位夥伴，從你最近遇到的工作問題開始聊。</p>
       </div>
     `;
   }
