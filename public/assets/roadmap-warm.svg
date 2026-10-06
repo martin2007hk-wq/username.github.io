@@ -1,0 +1,8 @@
+<svg width="720" height="420" viewBox="0 0 720 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="720" height="420" rx="28" fill="#F5F0E7"/>
+  <path d="M94 282C178 160 268 333 352 206C437 78 519 281 628 130" stroke="#D77D70" stroke-width="8" stroke-linecap="round"/>
+  <path d="M94 282C178 160 268 333 352 206C437 78 519 281 628 130" stroke="#FFFDF8" stroke-width="3" stroke-linecap="round" stroke-dasharray="3 13"/>
+  <g><circle cx="94" cy="282" r="30" fill="#E8A088"/><circle cx="352" cy="206" r="30" fill="#EED2AF"/><circle cx="628" cy="130" r="30" fill="#A9B598"/></g>
+  <g fill="#5F6D64" font-family="Arial, sans-serif" font-size="16" font-weight="700"><text x="64" y="345">看清楚</text><text x="311" y="270">試跑</text><text x="584" y="194">固化</text></g>
+  <circle cx="514" cy="323" r="62" fill="#DDE2D0" opacity=".8"/><circle cx="172" cy="102" r="42" fill="#E7DCC8" opacity=".8"/>
+</svg>
