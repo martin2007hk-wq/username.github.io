@@ -12,6 +12,7 @@ let _user = null;
 let _profile = null;
 
 const navCta = document.getElementById('navCta');
+const chatFab = document.getElementById('chatFab');
 
 // ── Listen for auth changes ─────────────────────────────
 
@@ -24,6 +25,9 @@ window.addEventListener('postaiage:authchange', (e) => {
 // ── Render Navbar CTA ───────────────────────────────────
 
 function render() {
+  // The community chat is members-only; /chat sends signed-out visitors home.
+  if (chatFab) chatFab.hidden = !_user;
+
   if (!navCta) return;
 
   if (_user) {

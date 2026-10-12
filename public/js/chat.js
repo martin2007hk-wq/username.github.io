@@ -335,15 +335,13 @@ class ChatManager {
 
   // ── Send Message ──────────────────────
   async sendMessage(text) {
-    console.log('💬 [sendMessage] called, panelId=', this._panelId, 'chatId=', this.currentChatId, 'user=', this.user?.uid);
-    if (!this._ensureAuth()) { console.log('💬 [sendMessage] no auth, returning'); return; }
-    if (!this.currentChatId) { console.log('💬 [sendMessage] no chatId, returning'); return; }
+    if (!this._ensureAuth()) return;
+    if (!this.currentChatId) return;
 
     const trimmed = text.trim();
-    console.log('💬 [sendMessage] trimmed text length=', trimmed.length);
 
     // Client-side validation
-    if (trimmed.length < MIN_CHARS) { console.log('💬 [sendMessage] too short'); return; }
+    if (trimmed.length < MIN_CHARS) return;
     if (trimmed.length > MAX_CHARS) {
       this._showError(`訊息太長（最多 ${MAX_CHARS} 字元）`);
       return;
@@ -361,11 +359,8 @@ class ChatManager {
     if (this.sendBtn) this.sendBtn.disabled = true;
 
     try {
-      console.log('💬 [sendMessage] calling ensureChatExists...');
       await this.ensureChatExists();
-      console.log('💬 [sendMessage] ensureChatExists done, calling _doSend...');
       await this._doSend(trimmed);
-      console.log('💬 [sendMessage] _doSend succeeded!');
 
       // Clear input
       if (this.inputEl) {
@@ -374,7 +369,7 @@ class ChatManager {
         this.inputEl.focus();
       }
     } catch (error) {
-      console.error('💬 [sendMessage] FAILED:', error.code, error.message, error);
+      console.error('Chat: send failed', error.code, error);
       if (error.code === 'permission-denied') {
         this._showError('發送失敗：權限不足或發送太頻密');
       } else {
@@ -541,12 +536,16 @@ class ChatManager {
 
   // ── Error Display ─────────────────────
   _showError(msg) {
-    // Use existing toast if available, fallback to console
-    if (typeof window.showToast === 'function') {
-      window.showToast(msg, 'error');
-    } else {
+    const container = document.getElementById('toastContainer');
+    if (!container) {
       console.warn('Chat:', msg);
+      return;
     }
+    const toast = document.createElement('div');
+    toast.className = 'toast toast--error';
+    toast.textContent = msg;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3500);
   }
 
   // ── Time Formatting ───────────────────
@@ -657,15 +656,4 @@ class ChatManager {
 // ─────────────────────────────────────────
 // Exports
 // ─────────────────────────────────────────
-// Named export: the class itself (for pages that need to instantiate separately)
 export { ChatManager };
-
-// Default export: singleton (for index.html inline chat widget)
-// Only create if the inline panel exists — avoids double-binding on /chat page
-const chatSingleton = document.getElementById('chatPanel') ? new ChatManager() : null;
-export default chatSingleton;
-
-// ── Global access for non-module scripts ──
-if (chatSingleton) {
-  window.PostAIAgeChat = chatSingleton;
-}

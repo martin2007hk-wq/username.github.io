@@ -8,6 +8,20 @@ const status = document.getElementById('inquiryStatus');
 const submit = document.getElementById('inquirySubmit');
 let selectedPlan = null;
 
+// Must match the consultationRequests rules in firestore.rules.
+const PROBLEM_MIN_CHARS = 10;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Count characters the way the rules do (an emoji is one character, not two).
+function charCount(text) {
+  return Array.from(text).length;
+}
+
+function showFormError(message, field) {
+  status.textContent = message;
+  if (field) document.getElementById(field).focus();
+}
+
 function choosePlan(plan) {
   selectedPlan = plan;
   document.querySelectorAll('.inquiry-plan').forEach((card) => {
@@ -47,11 +61,23 @@ form.addEventListener('submit', async (event) => {
   const consent = document.getElementById('inquiryConsent').checked;
 
   if (!selectedPlan) {
-    status.textContent = '請先選擇個人或團隊方向。';
+    showFormError('請先選擇個人或團隊方向。');
     return;
   }
-  if (!name || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !problem || !consent) {
-    status.textContent = '請檢查稱呼、有效電郵、工作情況，並勾選資料使用同意。';
+  if (!name) {
+    showFormError('請告訴我們怎樣稱呼你。', 'inquiryName');
+    return;
+  }
+  if (!EMAIL_PATTERN.test(email)) {
+    showFormError('這個電郵地址好像不完整，請再檢查一次。', 'inquiryEmail');
+    return;
+  }
+  if (charCount(problem) < PROBLEM_MIN_CHARS) {
+    showFormError(`請多寫幾句（至少 ${PROBLEM_MIN_CHARS} 個字），讓我們先了解你的情況。`, 'inquiryProblem');
+    return;
+  }
+  if (!consent) {
+    showFormError('請勾選同意，我們才能用這些資料回覆你。', 'inquiryConsent');
     return;
   }
 
@@ -71,7 +97,9 @@ form.addEventListener('submit', async (event) => {
     window.location.href = '/request-received?plan=' + encodeURIComponent(selectedPlan);
   } catch (error) {
     console.error('Consultation request failed:', error);
-    status.textContent = '這次沒有成功送出，請檢查網絡後再試，或電郵 contact@postaiage.com 聯絡我們。';
+    status.textContent = error.code === 'permission-denied'
+      ? '資料格式未能通過檢查，請檢查各欄位後再試，或電郵 contact@postaiage.com 聯絡我們。'
+      : '這次沒有成功送出，請檢查網絡後再試，或電郵 contact@postaiage.com 聯絡我們。';
     submit.disabled = false;
     submit.textContent = '提交申請，安排對話 →';
   }

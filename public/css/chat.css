@@ -33,53 +33,9 @@
   transform: scale(0.96);
 }
 
-.chat-fab .badge {
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #E84855;
-  color: #fff;
-  font-size: 11px;
-  font-weight: 700;
+/* Hidden for visitors who are not signed in (toggled by navbar-auth.js) */
+.chat-fab[hidden] {
   display: none;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-}
-
-.chat-fab .badge.visible {
-  display: flex;
-}
-
-/* ── Chat Panel ── */
-.chat-panel {
-  position: fixed;
-  bottom: 96px;
-  right: 28px;
-  width: 380px;
-  max-width: calc(100vw - 40px);
-  height: 520px;
-  max-height: calc(100vh - 140px);
-  background: var(--bg-card, #FFFBF5);
-  border-radius: var(--radius-lg, 20px);
-  box-shadow: 0 8px 40px rgba(44, 36, 22, 0.15),
-              0 2px 8px rgba(44, 36, 22, 0.06);
-  display: flex;
-  flex-direction: column;
-  z-index: 1000;
-  overflow: hidden;
-  transform-origin: bottom right;
-  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1),
-              opacity 0.3s ease;
-}
-
-.chat-panel.hidden {
-  transform: scale(0.85);
-  opacity: 0;
-  pointer-events: none;
 }
 
 /* ── Chat Header ── */
@@ -417,16 +373,6 @@
 
 /* ── Responsive ── */
 @media (max-width: 480px) {
-  .chat-panel {
-    bottom: 0;
-    right: 0;
-    width: 100%;
-    max-width: 100vw;
-    height: 100vh;
-    max-height: 100vh;
-    border-radius: 0;
-  }
-
   .chat-header {
     border-radius: 0;
   }

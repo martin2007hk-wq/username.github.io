@@ -48,7 +48,7 @@
         <input class="reg-text-input inquiry-input" id="inquiryEmail" name="email" type="email" autocomplete="email" maxlength="254" required placeholder="你平時收得到信的電郵">
 
         <label class="register-label" for="inquiryProblem">最近哪一件工作最花你的時間？</label>
-        <textarea class="reg-text-input inquiry-input inquiry-textarea" id="inquiryProblem" name="problem" maxlength="1200" required placeholder="例如：每週要手動整理大量客戶問題，常常重複回覆。"></textarea>
+        <textarea class="reg-text-input inquiry-input inquiry-textarea" id="inquiryProblem" name="problem" minlength="10" maxlength="1200" required placeholder="例如：每週要手動整理大量客戶問題，常常重複回覆。"></textarea>
 
         <div class="inquiry-consent">
           <label><input type="checkbox" id="inquiryConsent" required> 我同意 PostAIAge 使用以上資料回覆這次預約申請。</label>
@@ -60,6 +60,6 @@
       </form>
     </section>
   </main>
-  <script type="module" src="js/inquiry.js?v=1"></script>
+  <script type="module" src="js/inquiry.js?v=2"></script>
 </body>
 </html>

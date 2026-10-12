@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>收到你的資料 | PostAIAge</title>
-  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css?v=7">
   <style>
     .thanks-container {
       min-height: 100vh;
@@ -104,90 +104,67 @@
 <body>
   <div class="thanks-container">
     <div class="thanks-card">
-      <!-- Avatar: Google users get real photo, Email users get initial -->
+      <!-- Filled from the signed-in member's profile: Google photo or initial -->
       <div id="thanksAvatar"></div>
-      <h2 class="thanks-name" id="thanksName"></h2>
-      <p class="thanks-email" id="thanksEmail"></p>
+      <h2 class="thanks-name" id="thanksName">歡迎加入社群！</h2>
+      <p class="thanks-email" id="thanksEmail" hidden></p>
       <div id="thanksBadge"></div>
       <p class="thanks-message" id="thanksMessage"></p>
       <p class="thanks-sub">社群帳戶已建立。這不是服務預約；若你想談自己的工作問題，請提交服務申請，我們會再與你確認時間。</p>
       <a href="/chat" class="thanks-back">進入交流社群</a>
     </div>
-
-    <!-- Conversion Attribution Summary (hidden, for analytics) -->
-    <p id="conversionAttribution" style="display:none;margin-top:1.5rem;font-size:0.8rem;color:var(--text-muted);text-align:center;"></p>
   </div>
 
   <script src="js/cookies.js"></script>
-  <script>
-    (function() {
-      const params = new URLSearchParams(window.location.search);
-      const plan = params.get('plan') || 'A';
-      const method = params.get('method') || 'email';
-      const name = params.get('name') || '新夥伴';
-      const email = params.get('email') || '';
-      const avatar = params.get('avatar') || '';
+  <script type="module">
+    import './js/auth.js?v=8';
 
-      // Avatar
-      const avatarContainer = document.getElementById('thanksAvatar');
-      if (avatar) {
-        avatarContainer.innerHTML = '<img src="' + avatar + '" alt="' + name + '" class="thanks-avatar" referrerpolicy="no-referrer">';
-      } else {
-        const initial = name.charAt(0).toUpperCase();
-        avatarContainer.innerHTML = '<div class="thanks-avatar-placeholder">' + initial + '</div>';
+    // Read the member's own profile rather than URL parameters, so names and
+    // emails never travel in the address bar and nothing untrusted is rendered.
+    window.addEventListener('postaiage:authchange', (event) => {
+      const { user, profile } = event.detail;
+      if (!user) {
+        window.location.replace('/register');
+        return;
       }
 
-      // Name
+      const plan = profile?.plan === 'B' ? 'B' : 'A';
+      const name = profile?.name || user.displayName || '新夥伴';
+      const avatar = profile?.avatar || user.photoURL || '';
+
+      const avatarContainer = document.getElementById('thanksAvatar');
+      if (/^https:\/\//.test(avatar)) {
+        const img = document.createElement('img');
+        img.className = 'thanks-avatar';
+        img.src = avatar;
+        img.alt = '';
+        img.referrerPolicy = 'no-referrer';
+        avatarContainer.replaceChildren(img);
+      } else {
+        const placeholder = document.createElement('div');
+        placeholder.className = 'thanks-avatar-placeholder';
+        placeholder.textContent = (Array.from(name)[0] || '?').toUpperCase();
+        avatarContainer.replaceChildren(placeholder);
+      }
+
       document.getElementById('thanksName').textContent = '歡迎加入社群，' + name + '！';
 
-      // Email (only for email method)
-      if (email) {
-        document.getElementById('thanksEmail').textContent = email;
-      } else {
-        document.getElementById('thanksEmail').style.display = 'none';
-      }
+      const emailEl = document.getElementById('thanksEmail');
+      emailEl.textContent = user.email || '';
+      emailEl.hidden = !user.email;
 
-      // Badge
       const badge = document.getElementById('thanksBadge');
-      if (plan === 'B') {
-        badge.className = 'thanks-badge thanks-badge--planB';
-        badge.textContent = '團隊夥伴';
-      } else {
-        badge.className = 'thanks-badge thanks-badge--planA';
-        badge.textContent = '個人夥伴';
-      }
+      badge.className = 'thanks-badge thanks-badge--plan' + plan;
+      badge.textContent = plan === 'B' ? '團隊夥伴' : '個人夥伴';
 
-      // Message
-      const msg = document.getElementById('thanksMessage');
-      if (plan === 'B') {
-        msg.textContent = '歡迎分享你對團隊 AI 協作的想法，和夥伴一起交流實際做法。';
-      } else {
-        msg.textContent = '歡迎分享你正在摸索的工作改變，也看看夥伴們如何把 AI 用進日常。';
-      }
+      document.getElementById('thanksMessage').textContent = plan === 'B'
+        ? '歡迎分享你對團隊 AI 協作的想法，和夥伴一起交流實際做法。'
+        : '歡迎分享你正在摸索的工作改變，也看看夥伴們如何把 AI 用進日常。';
 
-      // ── Cookie: Mark session as registered ─────────────────
       if (window.PostAIAgeCookies) {
         window.PostAIAgeCookies.markRegistered(plan);
-
-        // Optional: Show conversion attribution in console for debugging
-        var v = window.PostAIAgeCookies.getVisitData();
-        if (v) {
-          var attrEl = document.getElementById('conversionAttribution');
-          if (attrEl) {
-            attrEl.style.display = 'block';
-            attrEl.textContent = '📊 Visit #' + v.visitCount + ' | Landing: ' + v.landingPage + ' | ' + (v.referrer !== 'direct' ? 'Referred by: ' + v.referrer : 'Direct traffic');
-          }
-
-          // Also record conversion event if tracker is available
-          if (typeof window.recordRegistration === 'function') {
-            // Already recorded by earlybird.js, but ensure visit context is there
-            console.log('PostAIAge: conversion attributed — visit #' + v.visitCount +
-              ', referrer=' + v.referrer +
-              ', daysSinceFirst=' + (window.PostAIAgeCookies.daysSinceFirstVisit()));
-          }
-        }
       }
-    })();
+    }, { once: true });
   </script>
 </body>
 </html>
