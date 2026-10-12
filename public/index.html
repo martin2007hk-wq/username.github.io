@@ -10,8 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=6">
-  <link rel="stylesheet" href="css/chat.css?v=4">
+  <link rel="stylesheet" href="css/style.css?v=7">
+  <link rel="stylesheet" href="css/chat.css?v=5">
 </head>
 <body>
 
@@ -159,7 +159,7 @@
 
       <!-- 兩個方案一左一右 -->
       <div class="plan-cards-inline">
-        <!-- 方案 A：免費訂閱通知 -->
+        <!-- 個人方案 -->
         <a class="plan-card-inline" id="planCardA" href="/inquiry?plan=A" aria-label="選擇個人工作拆解">
           <span class="plan-badge">個人方案</span>
           <h3>個人工作拆解</h3>
@@ -172,7 +172,7 @@
           </ul>
         </a>
 
-        <!-- 方案 B：搶先預約早鳥 -->
+        <!-- 團隊方案 -->
         <a class="plan-card-inline" id="planCardB" href="/inquiry?plan=B" aria-label="選擇團隊流程共建">
           <span class="plan-badge plan-badge--hot">團隊方案</span>
           <h3>團隊流程共建</h3>
@@ -205,53 +205,15 @@
     </div>
   </footer>
 
-  <!-- ===== Chat Widget ===== -->
-  <!-- Floating Action Button -->
-  <a href="/chat" class="chat-fab" id="chatFab" aria-label="開啟聊天">
-    💬
-    <span class="badge" id="chatBadge"></span>
-  </a>
-
-  <!-- Chat Panel -->
-  <div class="chat-panel hidden" id="chatPanel" aria-hidden="true">
-    <div class="chat-header">
-      <div class="chat-header-info">
-        <div class="chat-header-avatar" id="chatHeaderAvatar"></div>
-        <div>
-          <div class="chat-header-name" id="chatHeaderName">Chat</div>
-          <div class="chat-header-status" id="chatHeaderStatus"></div>
-        </div>
-      </div>
-      <button class="chat-close-btn" id="chatCloseBtn" aria-label="關閉聊天">&times;</button>
-    </div>
-    <div class="chat-messages" id="chatMessages">
-      <div class="chat-empty">
-        <span class="chat-empty-icon">💬</span>
-        <p class="chat-empty-text">還未有對話</p>
-        <p class="chat-empty-sub">到夥伴頁面選一位成員，從一句「最近怎樣？」開始。</p>
-      </div>
-    </div>
-    <div class="chat-input-area">
-      <textarea
-        class="chat-input"
-        id="chatInput"
-        rows="1"
-        placeholder="輸入訊息..."
-        maxlength="5000"
-      ></textarea>
-      <button class="chat-send-btn" id="chatSendBtn" aria-label="發送訊息">➤</button>
-    </div>
-  </div>
+  <!-- ===== Community Chat Shortcut (shown to signed-in members by navbar-auth.js) ===== -->
+  <a href="/chat" class="chat-fab" id="chatFab" aria-label="打開交流社群" hidden>💬</a>
 
   <!-- ===== Firebase Auth Module ===== -->
   <script type="module" src="js/auth.js?v=8"></script>
-  <script type="module" src="js/chat.js?v=7"></script>
-  <script type="module" src="js/navbar-auth.js?v=3"></script>
+  <script type="module" src="js/navbar-auth.js?v=4"></script>
 
   <!-- ===== Scripts ===== -->
   <script src="js/cookies.js"></script>
-  <script src="js/tracker.js"></script>
-  <!-- Service requests use the dedicated two-step inquiry page. -->
   <script src="js/main.js"></script>
 
   <!-- Cookie Consent Banner -->
@@ -297,65 +259,6 @@
       };
     })();
   </script>
-
-  <!-- Early Bird Modal -->
-  <div class="modal-overlay" id="earlyBirdModal" aria-hidden="true">
-    <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <div class="modal-header">
-        <div class="disclaimer-banner">
-          這只是預約方向對話，不會自動扣款；正式合作會先和你確認範圍與費用。
-        </div>
-        <h2 id="modalTitle">預約一節方向對話</h2>
-        <button class="modal-close" onclick="closeModal()" aria-label="關閉">&times;</button>
-      </div>
-      <div class="modal-body">
-        <div class="plan-cards">
-          <div class="plan-card" id="planA" onclick="selectPlan('A')" data-plan="A">
-            <span class="plan-badge">個人方案</span>
-            <h3>個人工作拆解</h3>
-            <p>用一次對話找出你最值得先改善的工作。</p>
-            <ul>
-              <li>✅ 現況與 AI 風險快速盤點</li>
-              <li>✅ 90 日行動方向建議</li>
-              <li>✅ 合作方案與預算透明說明</li>
-            </ul>
-          </div>
-          <div class="plan-card" id="planB" onclick="selectPlan('B')" data-plan="B">
-            <span class="plan-badge plan-badge--hot">團隊方案</span>
-            <h3>團隊流程共建</h3>
-            <p>從一個每天都在做的流程開始，一起做出可用的方法。</p>
-            <ul>
-              <li>✅ 目標與流程共同診斷</li>
-              <li>✅ 真實項目試跑與迭代</li>
-              <li>✅ 團隊 playbook 與交接</li>
-              <li>✅ 以成果為導向的檢視節奏</li>
-            </ul>
-          </div>
-        </div>
-        <div class="registration-methods" id="registrationMethods" style="display:none;">
-          <h4>選一個你方便的方式：</h4>
-          <div class="email-registration">
-            <input type="email" id="earlyBirdEmailModal" placeholder="輸入你的電郵地址" required>
-            <input type="password" id="earlyBirdPasswordModal" placeholder="設定密碼（最少6位）" required minlength="6" style="margin-top: 10px;">
-            <p class="privacy-notice">
-              🔐 我們只會用這個電郵聯絡你和處理本次登記，不會把資料賣給其他人。
-            </p>
-            <button class="btn btn-primary btn-full" onclick="submitEmailRegistration()">
-              以 Email 登記 →
-            </button>
-          </div>
-          <div class="divider"><span>或</span></div>
-          <button class="btn btn-google btn-full" onclick="submitGoogleRegistration()">
-            <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-            以 Google 帳戶繼續
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Toast Container -->
-  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
 
   <!-- ===== Login Modal ===== -->
   <div class="login-modal-overlay" id="loginModal" aria-hidden="true">

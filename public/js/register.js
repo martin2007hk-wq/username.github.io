@@ -107,10 +107,9 @@ window.submitEmailReg = async function () {
     statusEl.textContent = '✅ 帳戶已建立，正在帶你去下一步...';
     statusEl.classList.remove('hidden');
 
+    // /thanks reads the saved profile itself; keep personal data out of the URL.
     setTimeout(() => {
-      window.location.href = '/thanks?plan=' + encodeURIComponent(selectedPlan)
-        + '&method=email&name=' + encodeURIComponent(name)
-        + '&status=' + encodeURIComponent(selectedStatus);
+      window.location.href = '/thanks';
     }, 1000);
 
   } catch (error) {
@@ -118,12 +117,15 @@ window.submitEmailReg = async function () {
     statusEl.className = 'reg-status error';
     if (error.code === 'auth/weak-password') {
       statusEl.textContent = '密碼太容易猜，請換一個更安全的組合。';
-    } else if (error.code === 'auth/email-already-in-use') {
-      statusEl.textContent = '這個電郵已經有帳戶，請回到首頁登入。';
+    } else if (error.code === 'auth/invalid-email') {
+      statusEl.textContent = '這個電郵地址格式不正確，請再檢查一次。';
+    } else if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
+      // signUpWithEmail falls back to signing in when the email already exists.
+      statusEl.textContent = '這個電郵已經有帳戶，但密碼不正確。請回到首頁登入。';
     } else if (error.code === 'auth/too-many-requests') {
       statusEl.textContent = '嘗試次數太多，請休息一會再試。';
     } else {
-      statusEl.textContent = '未能完成登記：' + (error.message || '請稍後再試');
+      statusEl.textContent = '未能完成登記，請稍後再試。';
     }
     statusEl.classList.remove('hidden');
   } finally {
@@ -169,9 +171,7 @@ window.submitGoogleReg = async function () {
       });
     }
 
-    window.location.href = '/thanks?plan=' + encodeURIComponent(selectedPlan)
-      + '&method=google&name=' + encodeURIComponent(name)
-      + '&status=' + encodeURIComponent(selectedStatus);
+    window.location.href = '/thanks';
 
   } catch (error) {
     console.error('Google registration failed:', error);
@@ -184,14 +184,22 @@ window.submitGoogleReg = async function () {
 
 // ── Auth State ────────────────────────────────────────
 
-auth.onAuthStateChanged((user) => {
-  if (user) {
-    window.getUserProfile().then((profile) => {
-      const plan = profile?.plan || 'A';
-      window.location.href = '/thanks?plan=' + encodeURIComponent(plan);
-    }).catch(() => {
-      window.location.href = '/thanks';
-    });
+// Only the sign-in state restored on page load decides whether to leave.
+// Sign-ins that happen during registration are redirected by the submit
+// handlers once the profile is saved; redirecting here as well would race
+// those writes.
+let initialAuthHandled = false;
+auth.onAuthStateChanged(async (user) => {
+  if (initialAuthHandled) return;
+  initialAuthHandled = true;
+  if (!user) return;
+
+  // Members who already have a profile belong in the community. Signed-in
+  // users without one (e.g. Google sign-in from the login modal) may stay
+  // and finish registering.
+  const profile = await window.getUserProfile().catch(() => null);
+  if (profile?.plan) {
+    window.location.replace('/chat');
   }
 });
 

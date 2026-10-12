@@ -8,7 +8,7 @@
  */
 
 import { auth, db } from './auth.js?v=8';
-import { ChatManager } from './chat.js?v=7';
+import { ChatManager } from './chat.js?v=8';
 import {
   collection,
   query,
